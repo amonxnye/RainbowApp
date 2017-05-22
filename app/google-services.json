@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "984347885326",
+    "firebase_url": "https://rainbow-512e0.firebaseio.com",
+    "project_id": "rainbow-512e0",
+    "storage_bucket": "rainbow-512e0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:984347885326:android:aba6982b98fa552b",
+        "android_client_info": {
+          "package_name": "com.payrainbow.engineers.payrainbow"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "984347885326-novt1gad9cnfvdf00cspvj5rqf5dcbli.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.payrainbow.engineers.payrainbow",
+            "certificate_hash": "feec9bb5b8c4a54a272f55c706262ffca5b359d0"
+          }
+        },
+        {
+          "client_id": "984347885326-de3qltb9ocpu56nrk51kivo9v2saf446.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDuLWYi-plvGR53V814ABRhQuNHqP8EZGM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "984347885326-de3qltb9ocpu56nrk51kivo9v2saf446.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
