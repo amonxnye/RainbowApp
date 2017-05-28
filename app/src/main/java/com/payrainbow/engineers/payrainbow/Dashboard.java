@@ -21,6 +21,12 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -44,6 +50,10 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
 
     private static final String TAG = "PayRainbow_APP";
     private FirebaseAuth mAuth;
+    FirebaseUser currentUser = mAuth.getInstance().getCurrentUser();
+     TextView Balancex ;
+     TextView Purchases ;
+     TextView Card ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,40 +62,15 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        TextView Balance = (TextView) findViewById(R.id.balance_text);
-        TextView Purchases = (TextView) findViewById(R.id.purchases_text);
-        TextView Card = (TextView) findViewById(R.id.card_text);
+         Balancex = (TextView) findViewById(R.id.balance_text);
+        Purchases = (TextView) findViewById(R.id.purchases_text);
+        Card = (TextView) findViewById(R.id.card_text);
 
-        Button Getbtn = (Button)findViewById(R.id.getbtn);
-        Button Postbtn = (Button)findViewById(R.id.postbtn);
 
-        FirebaseUser currentUser = mAuth.getInstance().getCurrentUser();
 
-        // updateUI(currentUser);
-
-        // Balance.setText(GetText("balance", currentUser.getEmail().toString()));
-        // Purchases.setText(GetText("purchases", currentUser.getEmail().toString()));
-        //Card.setText(GetText("card", currentUser.getEmail().toString()));
-
-        // new SendDeviceDetails();
-        new SendData().execute();
-
-        Getbtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new SendData().execute();
-
-            }
-        });
-
-        Postbtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new SendData_Post().execute();
-
-            }
-        });
-
+        purchases();
+        card();
+        balance();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -106,6 +91,80 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
             }
         });
     }
+
+    public void purchases(){
+        final String[] responsex = new String[1];
+        // Instantiate the RequestQueue.
+        RequestQueue queue = Volley.newRequestQueue(this);
+        String url ="http://payrainbow.com/userdata_app.php?email="+currentUser.getEmail().toString()+"&data=purchases";
+
+// Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        // Display the first 500 characters of the response string.
+                        Purchases.setText(response.toString());
+                        responsex[0] = response;
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Balancex.setText("Retry");
+            }
+        });
+// Add the request to the RequestQueue.
+        queue.add(stringRequest);
+       // return responsex.toString() ;
+    }
+
+    public void card(){
+        // Instantiate the RequestQueue.
+        RequestQueue queue = Volley.newRequestQueue(this);
+        String url ="http://payrainbow.com/userdata_app.php?email="+currentUser.getEmail().toString()+"&data=card";
+
+// Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        // Display the first 500 characters of the response string.
+                        Card.setText(response.toString());
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Balancex.setText("Retry");
+            }
+        });
+// Add the request to the RequestQueue.
+        queue.add(stringRequest);
+
+    }
+
+    public void balance(){
+        // Instantiate the RequestQueue.
+        RequestQueue queue = Volley.newRequestQueue(this);
+        String url ="http://payrainbow.com/userdata_app.php?email="+currentUser.getEmail().toString()+"&data=balance";
+
+// Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        // Display the first 500 characters of the response string.
+                        Balancex.setText(response.toString());
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Balancex.setText("Retry");
+            }
+        });
+// Add the request to the RequestQueue.
+        queue.add(stringRequest);
+    }
+
 
     @Override
     public void onBackPressed() {
@@ -320,250 +379,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         }
     }
 
-//    public class SendDeviceDetails extends AsyncTask<String, Void, String> {
-//
-//        String email,data;
-//
-//        public SendDeviceDetails(String emailx, String datax) {
-//            email = emailx;
-//            data = datax;
-//        }
-//
-//        @Override
-//        protected String doInBackground(String... params) {
-//
-//            // These two need to be declared outside the try/catch
-//
-//            String response = null;
-//             Log.d(TAG,email);
-//             Log.d(TAG, data);
-//
-//            try {
-//                // Construct the URL for the OpenWeatherMap query
-//                // Possible parameters are avaiable at OWM's forecast API page, at
-//                URL url = new URL("http://payrainbow.com/userdata_app.php");
-//                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-//                conn.setReadTimeout(10000);
-//                conn.setConnectTimeout(15000);
-//                conn.setRequestMethod("POST");
-//                conn.setDoInput(true);
-//                conn.setDoOutput(true);
-//
-//                //   Intent intent = getIntent();
-//
-//                // String email = intent.getStringExtra("email");
-//
-//                Uri.Builder builder = new Uri.Builder()
-//                        .appendQueryParameter("email", email)
-//                        .appendQueryParameter("data", data);
-//                String query = builder.build().getEncodedQuery();
-//
-//                OutputStream os = conn.getOutputStream();
-//                // InputStream is = conn.getInputStream();
-//                BufferedWriter writer = new BufferedWriter(
-//                        new OutputStreamWriter(os, "UTF-8"));
-//                writer.write(query);
-//                writer.flush();
-//                writer.close();
-//                os.close();
-//
-//                conn.connect();
-//
-//                // Toast.makeText(PayActivity.this,"Payment Done...", Toast.LENGTH_SHORT).show();
-//
-//
-//                // Read the input stream into a String
-//                InputStream inputStream = conn.getInputStream();
-//                StringBuffer buffer = new StringBuffer();
-//                if (inputStream == null) {
-//                    // Nothing to do.
-//                    return null;
-//                }
-//                BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-//
-//                String line;
-//                while ((line = reader.readLine()) != null) {
-//                    // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
-//                    // But it does make debugging a *lot* easier if you print out the completed
-//                    // buffer for debugging.
-//                    buffer.append(line + "\n");
-//                }
-//
-//                if (buffer.length() == 0) {
-//                    // Stream was empty.  No point in parsing.
-//                    return null;
-//                }
-//                response = buffer.toString();
-//                Log.d(TAG, response);
-//                // return response;
-//
-//                Toast.makeText(Dashboard.this, response, Toast.LENGTH_SHORT).show();
-//
-//            } catch (Exception e) {
-//                  Log.e(TAG,e.toString());
-//               //  Toast.makeText(Dashboard.this, "No data Currently", Toast.LENGTH_SHORT).show();
-//                // If the code didn't successfully get the weather data, there's no point in attemping
-//                // to parse it.
-//                return "0";
-//            }
-//            return response;
-//        }
-//
-//        @Override
-//        protected void onPostExecute(String result) {
-//            //    Toast.makeText(getApplicationContext(), result,Toast.LENGTH_LONG).show();
-//            Log.d(TAG, "DataCheck:onSuccess:" + result);
-//            Toast.makeText(Dashboard.this, result.toString(), Toast.LENGTH_SHORT).show();
-//
-//        }
-//
-//    }
 
-
-    // Create GetText Metod
-//    public String GetText(String datax, String email) throws UnsupportedEncodingException {
-//        // Get user defined values
-//        //   batch = batch_number.getText().toString();
-//
-//
-//        // Create data variable for sent values to server
-//
-//        String data = URLEncoder.encode("email", "UTF-8") + "=" + URLEncoder.encode("amonxnye@gmail.com", "UTF-8");
-//
-//        data += "&" + URLEncoder.encode("data", "UTF-8") + "="
-//                + URLEncoder.encode("balance", "UTF-8");
-///*
-//        data += "&" + URLEncoder.encode("user", "UTF-8")
-//                + "=" + URLEncoder.encode(Login, "UTF-8");
-//
-//        data += "&" + URLEncoder.encode("pass", "UTF-8")
-//                + "=" + URLEncoder.encode(Pass, "UTF-8");
-//*/
-//        String text = "";
-//        BufferedReader reader = null;
-//
-//        // Send data
-//        try {
-//
-//            // Defined URL  where to send data
-//            URL url = new URL("http://payrainbow.com/userdata_app.php");
-//
-//            // Send POST data request
-//
-//            URLConnection conn = url.openConnection();
-//            conn.setDoOutput(true);
-//            OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
-//            wr.write(data);
-//            wr.flush();
-//
-//            // Get the server response
-//
-//            reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-//            StringBuilder sb = new StringBuilder();
-//            String line = null;
-//
-//            // Read Server Response
-//            while ((line = reader.readLine()) != null) {
-//                // Append server response in string
-//                sb.append(line + "\n");
-//            }
-//
-//
-//            text = sb.toString();
-//        } catch (Exception ex) {
-//
-//        } finally {
-//            try {
-//
-//                reader.close();
-//            } catch (Exception ex) {
-//            }
-//        }
-//
-//        // Show response on activity
-//        // content.setText( text  );
-//        Log.d(TAG, text.toString());
-//
-//        //send data to intent
-//     /*   Intent intent = new Intent(getBaseContext(),"Activity.this");
-//        intent.putExtra("result_data", text);
-//        startActivity(intent);
-//        */
-//
-//        return text;
-//    }
-
-//
-//    public class SendData extends AsyncTask<String, Void, String> {
-//
-//
-//        protected void onPreExecute() {
-//        }
-//
-//        protected String doInBackground(String... arg0) {
-//
-//            try {
-//
-//                URL url = new URL("http://payrainbow.com/userdata_app.php"); // here is your URL path
-//
-//                JSONObject postDataParams = new JSONObject();
-//                postDataParams.put("email", "amonxnye@gmal.com");
-//                postDataParams.put("data", "balance");
-//                Log.e("params", postDataParams.toString());
-//
-//                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-//                conn.setReadTimeout(15000 /* milliseconds */);
-//                conn.setConnectTimeout(15000 /* milliseconds */);
-//                conn.setRequestMethod("GET");
-//                conn.setDoInput(true);
-//                conn.setDoOutput(true);
-//
-//                OutputStream os = conn.getOutputStream();
-//                BufferedWriter writer = new BufferedWriter(
-//                        new OutputStreamWriter(os, "UTF-8"));
-//                writer.write(getPostDataString(postDataParams));
-//
-//                writer.flush();
-//                writer.close();
-//                os.close();
-//
-//                int responseCode = conn.getResponseCode();
-//
-//                if (responseCode == HttpURLConnection.HTTP_OK) {
-//
-//                    BufferedReader in = new BufferedReader(
-//                            new InputStreamReader(
-//                                    conn.getInputStream()));
-//                    StringBuffer sb = new StringBuffer("");
-//                    String line = "";
-//
-//                    while ((line = in.readLine()) != null) {
-//
-//                        sb.append(line);
-//                        break;
-//                    }
-//
-//                    in.close();
-//                    return sb.toString();
-//
-//                } else {
-//                    return new String("false : " + responseCode);
-//                }
-//            } catch (Exception e) {
-//                return new String("Exception: " + e.getMessage());
-//            }
-//
-//        }
-//
-//        @Override
-//        protected void onPostExecute(String result) {
-//        //    Toast.makeText(getApplicationContext(), result,Toast.LENGTH_LONG).show();
-//            Log.d(TAG, "DataCheck:onSuccess:" + result);
-//            Toast.makeText(Dashboard.this, result.toString(), Toast.LENGTH_SHORT).show();
-//
-//        }
-//    }
-//
     public String getPostDataString(JSONObject params) throws Exception {
 
         StringBuilder result = new StringBuilder();
@@ -589,99 +405,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         return result.toString();
     }
 
-//    public class NewDataMethod extends AsyncTask<String, Void, String> {
-//
-//
-//
-//        @Override
-//        protected void onPreExecute () {
-//        }
-//
-//        @Override
-//        protected String doInBackground (String...arg0){
-//
-///*
-//       if(byGetOrPost == 0){ //means by Get Method
-//
-//            try{
-//                String username = (String)arg0[0];
-//                String password = (String)arg0[1];
-//                String link = "http://ec2-54-89-162-255.compute-1.amazonaws.com/app.php";
-//
-//                URL url = new URL(link);
-//                HttpClient client = new DefaultHttpClient();
-//                HttpGet request = new HttpGet();
-//                request.setURI(new URI(link));
-//                HttpResponse response = client.execute(request);
-//                BufferedReader in = new BufferedReader(new
-//                        InputStreamReader(response.getEntity().getContent()));
-//
-//                StringBuffer sb = new StringBuffer("");
-//                String line="";
-//
-//                while ((line = in.readLine()) != null) {
-//                    sb.append(line);
-//                    break;
-//                }
-//
-//                in.close();
-//                return sb.toString();
-//            } catch(Exception e){
-//                return new String("Exception: " + e.getMessage());
-//            }
-//        } else{
-//            */
-//            try {
-//                // String username = (String)arg0[0];
-//                //  String password = (String)arg0[1];
-//
-//                String link = "http://payrainbow.com/userdata_app.php";
-//
-//                String data = URLEncoder.encode("email", "UTF-8") + "=" +
-//                        URLEncoder.encode("amonxnye@gmail.com", "UTF-8");
-//
-//                data += "&" + URLEncoder.encode("data", "UTF-8") + "=" +
-//                        URLEncoder.encode("balance", "UTF-8");
-//
-//                URL url = new URL(link);
-//                URLConnection conn = url.openConnection();
-//
-//                conn.setDoOutput(true);
-//                OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
-//
-//                wr.write(data);
-//                wr.flush();
-//
-//                BufferedReader reader = new BufferedReader(new
-//                        InputStreamReader(conn.getInputStream()));
-//
-//                StringBuilder sb = new StringBuilder();
-//                String line = null;
-//
-//                // Read Server Response
-//                while ((line = reader.readLine()) != null) {
-//                    sb.append(line);
-//                    break;
-//                }
-//
-//                return sb.toString();
-//            } catch (Exception e) {
-//                return new String("Exception: " + e.getMessage());
-//            }
-//       /* }
-//      return  sb.toString();*/
-//        }
-//
-//        @Override
-//        protected void onPostExecute (String result){
-//            // this.statusField.setText("Login Successful");
-//            Toast.makeText(Dashboard.this, result.toString(), Toast.LENGTH_SHORT).show();
-//            //Toast.makeText(, "Hello"+result.toString(), Toast.LENGTH_SHORT).show();
-//           // Intent intent = new Intent(getBaseContext(), ResultsActivity.class);
-//           // intent.putExtra("result_data", result);
-//           // startActivity(intent);
-//        }
-//    }
+
 
     /****************************Methods of Data Sending End*****************/
 }

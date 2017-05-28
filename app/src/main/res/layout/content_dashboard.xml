@@ -16,14 +16,7 @@
         tools:layout_editor_absoluteX="8dp"
         tools:layout_editor_absoluteY="8dp">
 
-        <Button
-            android:id="@+id/postbtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="POST"
-            android:layout_below="@+id/getbtn"
-            android:layout_alignEnd="@+id/getbtn" />
+
 
         <TextView
             android:id="@+id/card_text"
@@ -100,15 +93,7 @@
             android:layout_below="@+id/textView5"
             android:layout_toEndOf="@+id/textView5" />
 
-        <Button
-            android:id="@+id/getbtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignEnd="@+id/text1"
-            android:layout_below="@+id/text1"
-            android:layout_marginEnd="43dp"
-            android:layout_marginTop="65dp"
-            android:text="Get" />
+
 
     </RelativeLayout>
 </android.support.constraint.ConstraintLayout>
