@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 Toast.makeText(MainActivity.this, "Approve.",Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(MainActivity.this, ApproveActivity.class);
+                Intent intent = new Intent(MainActivity.this, Deposit.class);
                 startActivity(intent);
             }
         });
@@ -149,7 +149,7 @@ public class MainActivity extends AppCompatActivity
 
             Toast.makeText(MainActivity.this, "MainActivity+Approve",Toast.LENGTH_SHORT).show();
 
-            Intent intent = new Intent(MainActivity.this, ApproveActivity.class);
+            Intent intent = new Intent(MainActivity.this, Deposit.class);
             startActivity(intent);
         } else if (id == R.id.nav_manage) {
             Toast.makeText(MainActivity.this, "MainActivity+Dashboard",Toast.LENGTH_SHORT).show();

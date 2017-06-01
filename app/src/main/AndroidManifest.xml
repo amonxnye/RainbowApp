@@ -49,7 +49,7 @@
         </service>
         <!-- [END firebase_iid_service] -->
         <activity
-            android:name=".ApproveActivity"
+            android:name=".Deposit"
             android:label="@string/title_activity_approve"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity

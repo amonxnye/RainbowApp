@@ -215,7 +215,7 @@ private static final int RC_SIGN_IN = 9001;
 
             Toast.makeText(Login.this, "Login+Approve",Toast.LENGTH_SHORT).show();
 
-            Intent intent = new Intent(Login.this,ApproveActivity.class);
+            Intent intent = new Intent(Login.this,Deposit.class);
             startActivity(intent);
 
         } else if (id == R.id.nav_manage) {
