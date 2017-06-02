@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.payrainbow.engineers.payrainbow.Dashboard"
+    tools:showIn="@layout/app_bar_dashboard">
+
+
+
+    <RelativeLayout
+        android:layout_width="344dp"
+        android:layout_height="495dp"
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="8dp">
+
+        <Button
+            android:id="@+id/postbtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="POST"
+            android:layout_below="@+id/getbtn"
+            android:layout_alignEnd="@+id/getbtn" />
+
+        <TextView
+            android:id="@+id/card_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TextView"
+            android:textSize="30sp"
+            tools:layout_editor_absoluteX="189dp"
+            tools:layout_editor_absoluteY="190dp"
+            android:layout_marginTop="9dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="18dp" />
+
+        <TextView
+            android:id="@+id/textView7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Card No:"
+            android:textSize="30sp"
+            tools:layout_editor_absoluteX="1dp"
+            tools:layout_editor_absoluteY="190dp"
+            android:layout_alignBaseline="@+id/card_text"
+            android:layout_alignBottom="@+id/card_text"
+            android:layout_alignEnd="@+id/text1" />
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Purchases: "
+            android:textSize="30sp"
+            tools:layout_editor_absoluteX="1dp"
+            tools:layout_editor_absoluteY="113dp"
+            android:layout_alignBaseline="@+id/purchases_text"
+            android:layout_alignBottom="@+id/purchases_text"
+            android:layout_alignParentStart="true" />
+
+        <TextView
+            android:id="@+id/purchases_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TextView"
+            android:textSize="30sp"
+            tools:layout_editor_absoluteX="189dp"
+            tools:layout_editor_absoluteY="113dp"
+            android:layout_marginEnd="41dp"
+            android:layout_marginTop="45dp"
+            android:layout_below="@+id/textView7"
+            android:layout_alignParentEnd="true" />
+
+        <TextView
+            android:id="@+id/text1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Balance :"
+            android:textSize="30sp"
+            tools:layout_editor_absoluteX="1dp"
+            tools:layout_editor_absoluteY="34dp"
+            android:layout_alignBaseline="@+id/balance_text"
+            android:layout_alignBottom="@+id/balance_text"
+            android:layout_alignParentStart="true" />
+
+        <TextView
+            android:id="@+id/balance_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TextView"
+            android:textSize="30sp"
+            tools:layout_editor_absoluteX="189dp"
+            tools:layout_editor_absoluteY="34dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="104dp"
+            android:layout_below="@+id/textView5"
+            android:layout_toEndOf="@+id/textView5" />
+
+        <Button
+            android:id="@+id/getbtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/text1"
+            android:layout_below="@+id/text1"
+            android:layout_marginEnd="43dp"
+            android:layout_marginTop="65dp"
+            android:text="Get" />
+
+    </RelativeLayout>
+</android.support.constraint.ConstraintLayout>

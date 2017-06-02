@@ -34,23 +34,32 @@
             </intent-filter>
         </activity>
 
-
         <!-- [START firebase_service] -->
-        <service
-            android:name=".MyFirebaseMessagingService">
+        <service android:name=".MyFirebaseMessagingService">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
         <!-- [END firebase_service] -->
         <!-- [START firebase_iid_service] -->
-        <service
-            android:name=".MyFirebaseInstanceIDService">
+        <service android:name=".MyFirebaseInstanceIDService">
             <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
         <!-- [END firebase_iid_service] -->
+        <activity
+            android:name=".ApproveActivity"
+            android:label="@string/title_activity_approve"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Dashboard"
+            android:label="@string/title_activity_dashboard"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Login"
+            android:label="@string/title_activity_login"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

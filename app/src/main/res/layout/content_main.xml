@@ -12,18 +12,59 @@
     <RelativeLayout
         android:layout_width="409dp"
         android:layout_height="546dp"
-        tools:layout_editor_absoluteX="-24dp"
-        tools:layout_editor_absoluteY="-91dp">
+        tools:layout_editor_absoluteX="-33dp"
+        tools:layout_editor_absoluteY="-51dp">
 
-        <com.google.android.gms.common.SignInButton
-            android:id="@+id/sign_in_button"
+        <Button
+            android:id="@+id/Login"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="219dp"
+            android:text="Login"
+            android:visibility="visible"
             android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="199dp"
-            tools:layout_editor_absoluteX="147dp"
-            tools:layout_editor_absoluteY="215dp" />
+            android:layout_centerHorizontal="true" />
+
+        <Button
+            android:id="@+id/Dashboard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/Login"
+            android:layout_below="@+id/Login"
+            android:layout_marginStart="7dp"
+            android:layout_marginTop="37dp"
+            android:text="Dashboard"
+            android:visibility="invisible" />
+
+        <Button
+            android:id="@+id/Approve"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/Dashboard"
+            android:layout_below="@+id/Dashboard"
+            android:layout_marginTop="52dp"
+            android:text="Approve"
+            android:visibility="invisible" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="PayRainbow"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="40sp"
+            android:layout_above="@+id/Dashboard"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="82dp"
+            android:layout_marginBottom="87dp" />
+
+        <Button
+            android:id="@+id/logoutbtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/Dashboard"
+            android:layout_below="@+id/Dashboard"
+            android:text="Logout" />
 
     </RelativeLayout>
 
