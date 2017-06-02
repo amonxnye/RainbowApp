@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/PayRainbow.iml" filepath="$PROJECT_DIR$/PayRainbow.iml" />
+      <module fileurl="file://$PROJECT_DIR$/RainbowApp.iml" filepath="$PROJECT_DIR$/RainbowApp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
