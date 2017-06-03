@@ -2,9 +2,11 @@ package com.payrainbow.engineers.payrainbow;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -14,6 +16,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -21,6 +26,7 @@ import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.HttpHeaderParser;
@@ -36,6 +42,10 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.logging.Handler;
+import java.util.logging.LogRecord;
 
 public class Deposit extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -45,6 +55,14 @@ public class Deposit extends AppCompatActivity implements NavigationView.OnNavig
 
     String amount ="";
     String phone_number ="";
+    String tryamount ="";
+    Button depositbtn;
+    EditText deposit_amount;
+    TextView status_view;
+    String tryfinalTx_reference = "",
+            tryvar_external_ref = "",
+            tryvar_sender_reference ="";
+    FirebaseUser user ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,11 +72,35 @@ public class Deposit extends AppCompatActivity implements NavigationView.OnNavig
         setContentView(R.layout.activity_approve);
         mAuth = FirebaseAuth.getInstance();
 
-        final FirebaseUser user = mAuth.getCurrentUser();
+         user = mAuth.getCurrentUser();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        deposit_amount = (EditText)findViewById(R.id.amount_text);
+
+
+        status_view = (TextView)findViewById(R.id.status);
+
+
+        depositbtn = (Button)findViewById(R.id.deposit_btn);
+        depositbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               // amount = "2000";
+                phone_number = "0700110561";
+                int min = 1;
+                int max = 999999999;
+                amount = deposit_amount.getText().toString();
+                tryamount = amount;
+                Random r = new Random();
+                int userid_token_refrence = r.nextInt(max - min + 1) + min;
+
+               tryvar_sender_reference = user.getEmail()+"_"+user.getUid()+"_"+userid_token_refrence ;
+                Volley_Deposit_step_one(phone_number,amount,user.getEmail()+"_"+user.getUid()+"_"+userid_token_refrence,Token);
+
+            }
+        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -73,16 +115,13 @@ public class Deposit extends AppCompatActivity implements NavigationView.OnNavig
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //  Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                int min = 1;
-                int max = 999999999;
+                  Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show();
 
-                Random r = new Random();
-                int userid_token_refrence = r.nextInt(max - min + 1) + min;
                 // user.getEmail();
                 amount = "2000";
                 phone_number = "0700110561";
-                Volley_Deposit_step_one(phone_number,amount,user.getEmail()+"_"+user.getUid()+"_"+userid_token_refrence,Token);
+
+               // Volley_Deposit_step_one(phone_number,amount,user.getEmail()+"_"+user.getUid()+"_"+userid_token_refrence,Token);
                 //number
                 //amount
                 //external_ref
@@ -253,9 +292,34 @@ public class Deposit extends AppCompatActivity implements NavigationView.OnNavig
                             // Toast.makeText(Deposit.this, status, Toast.LENGTH_SHORT).show();
 
                             try {
-                                Volley_Deposit_step_two(request_id, var_external_ref);
+                               // status_view.setText("Step 1");
+
+                               // final String finalTx_reference = tx_reference;
+                                final int secs = 20;
+
+                                final String finalRequest_id = request_id;
+                                Deposit.this.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        new CountDownTimer((secs +1)*1000,1000){
+
+                                            @Override
+                                            public void onTick(long millisUntilFinished) {
+                                                Log.d(TAG, String.valueOf(millisUntilFinished +"**"+finalRequest_id+"**"+var_external_ref));
+                                            }
+
+                                            @Override
+                                            public void onFinish() {
+
+                                                Volley_Deposit_step_two(finalRequest_id, var_external_ref);
+                                                //   Volley_Deposit_step_three(finalTx_reference,var_external_ref);
+                                            }
+                                        }.start();
+
+                                    }
+                                });
                             }catch (Exception e){
-                                Toast.makeText(Deposit.this, "Failed", Toast.LENGTH_SHORT).show();
+                                status_view.setText("Step 1_failed");
                             }
 
 
@@ -279,7 +343,7 @@ public class Deposit extends AppCompatActivity implements NavigationView.OnNavig
         }
     }
 
-    public void Volley_Deposit_step_two(String var_request_id, final String var_external_ref){
+    public void Volley_Deposit_step_two(final String var_request_id, final String var_external_ref){
 
 
         try {
@@ -328,6 +392,7 @@ public class Deposit extends AppCompatActivity implements NavigationView.OnNavig
                 }
 
 
+
                 @Override
                 protected Response<String> parseNetworkResponse(NetworkResponse response) {
                     String responseString = "";
@@ -335,7 +400,7 @@ public class Deposit extends AppCompatActivity implements NavigationView.OnNavig
                     String status = "";
                     String status_code = "";
                     String tx_status = "";
-                    String tx_reference = "";
+                 String tx_reference = "";
                     String message = "";
                     String action = "";
 
@@ -372,15 +437,44 @@ public class Deposit extends AppCompatActivity implements NavigationView.OnNavig
                             action =  obj.getString("action");
 
                             // Log.i("Poketi", obj);
+                           // Log.d(TAG, tx_reference);
+
+                           // Toast.makeText(Deposit.this, tx_status, Toast.LENGTH_SHORT).show();
+
+                            final String finalTx_reference = tx_reference;
+                            final int secs = 20;
+
+                            Deposit.this.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    new CountDownTimer((secs +1)*1000,1000){
+
+                                        @Override
+                                        public void onTick(long millisUntilFinished) {
+                                            Log.d(TAG, String.valueOf(millisUntilFinished));
+                                        }
+
+                                        @Override
+                                        public void onFinish() {
+                                            tryfinalTx_reference = finalTx_reference;
+                                            tryvar_external_ref = var_external_ref;
+                                         //   Volley_Deposit_step_three(finalTx_reference,var_external_ref);
+
+                                            //Send to DB
+                                            Volley_Deposit_server(finalTx_reference,var_external_ref,user.getEmail(),phone_number,var_request_id,tryamount);
+
+
+                                        }
+                                    }.start();
+
+                                }
+                            });
+
+
                             Log.d(TAG, tx_reference);
-                            Toast.makeText(Deposit.this, tx_status, Toast.LENGTH_SHORT).show();
+                            // status_view.setText("Step 2");
 
 
-                            try {
-                                Volley_Deposit_step_three(tx_reference,var_external_ref);
-                            }catch (Exception e){
-                                Toast.makeText(Deposit.this, "Failed", Toast.LENGTH_SHORT).show();
-                            }
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -396,11 +490,117 @@ public class Deposit extends AppCompatActivity implements NavigationView.OnNavig
                 }
             };
 
+            stringRequest.setRetryPolicy(new RetryPolicy() {
+                @Override
+                public int getCurrentTimeout() {
+                    return 5000;
+                }
+
+                @Override
+                public int getCurrentRetryCount() {
+                    return 50000;
+                }
+
+                @Override
+                public void retry(VolleyError error) throws VolleyError {
+
+                }
+            });
+
             requestQueue.add(stringRequest);
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
+
+    private void Volley_Deposit_server(String var_tx_reference, String var_external_ref, String email, String phone_number, String var_request_id,String var_amount) {
+
+        try {
+            RequestQueue requestQueue = Volley.newRequestQueue(this);
+            String URL = "http://payrainbow.com/depox_server.php";
+            JSONObject jsonBody = new JSONObject();
+            jsonBody.put("email", email);
+            jsonBody.put("phone", phone_number);
+            jsonBody.put("merchant_code", "337");
+            jsonBody.put("amount", var_amount);
+            jsonBody.put("request_id", var_request_id);
+            jsonBody.put("tx_reference", var_tx_reference);
+            jsonBody.put("external_ref", var_external_ref);
+            jsonBody.put("sender_reference", tryvar_sender_reference);
+
+            final String requestBody = jsonBody.toString();
+            // final String requestBodyJson = jsonBody.toString();
+
+
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    Log.i("Payrainbow_server", response);
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e("Payrainbow_server", error.toString());
+                }
+            }) {
+                @Override
+                public String getBodyContentType() {
+                    return "application/json; charset=utf-8";
+                }
+
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    HashMap<String, String> params = new HashMap<String, String>();
+                    //params.put("Authorization-Key", "CV8FJVBHM6KXHEHUPYGWJJKFYEEWUQN8CKTAXNGRWRUQN9YAHN3");
+                    return params;
+                }
+
+                @Override
+                public byte[] getBody() throws AuthFailureError {
+                    try {
+                        return requestBody == null ? null : requestBody.getBytes("utf-8");
+                    } catch (UnsupportedEncodingException uee) {
+                        VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", requestBody, "utf-8");
+                        return null;
+                    }
+                }
+
+
+                @Override
+                protected Response<String> parseNetworkResponse(NetworkResponse response) {
+                    String responseString = "";
+                    String json = "";
+
+                    String tx_status = "";
+                    String status = "";
+
+
+                    if (response != null) {
+                        responseString = String.valueOf(response.statusCode);
+                        // can get more details such as response.headers
+                        try {
+
+                            json = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+                        }
+                        Log.d(TAG, "Done"+json);
+
+
+
+                    }
+                    return Response.success(responseString, HttpHeaderParser.parseCacheHeaders(response));
+                    //return Response.success(request_id);
+
+                }
+            };
+
+            requestQueue.add(stringRequest);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public void Volley_Deposit_step_three(String var_tx_reference,String var_external_ref ){
 
@@ -506,7 +706,56 @@ public class Deposit extends AppCompatActivity implements NavigationView.OnNavig
 
                             // Log.i("Poketi", obj);
                             Log.d(TAG, tx_status);
-                            Display(tx_status);
+
+                            final String finalTx_status = tx_status;
+                            final int secs = 5;
+
+                            Deposit.this.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    new CountDownTimer((secs +1)*1000,1000){
+
+                                        @Override
+                                        public void onTick(long millisUntilFinished) {
+                                            Log.d(TAG, String.valueOf(millisUntilFinished));
+                                        }
+
+                                        @Override
+                                        public void onFinish() {
+                                            Log.d(TAG, finalTx_status);
+                                                }
+                                    }.start();
+
+                                }
+                            });
+                            final int secs2 =60;
+                            Deposit.this.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    new CountDownTimer((secs2 +1)*1000,1000){
+
+                                        @Override
+                                        public void onTick(long millisUntilFinished) {
+                                            Log.d(TAG, String.valueOf(millisUntilFinished));
+                                        }
+
+                                        @Override
+                                        public void onFinish() {
+                                            Log.d(TAG, finalTx_status);
+                                            Log.d(TAG, tryfinalTx_reference + "__"+tryvar_external_ref);
+
+                                            if(finalTx_status =="PENDING"){
+                                                Volley_Deposit_step_three(tryfinalTx_reference,tryvar_external_ref);
+                                            }else if(finalTx_status =="") {
+                                                Toast.makeText(Deposit.this, "Failed", Toast.LENGTH_SHORT).show();
+                                            }else if(finalTx_status =="SUCCEEDED") {
+                                                Toast.makeText(Deposit.this, finalTx_status, Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                    }.start();
+
+                                }
+                            });
 
 
                         } catch (JSONException e) {
@@ -532,6 +781,7 @@ public class Deposit extends AppCompatActivity implements NavigationView.OnNavig
     public void Display(String textdata){
         //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show();
         Toast.makeText(Deposit.this, textdata, Toast.LENGTH_SHORT).show();
+        status_view.setText("Done");
 
     }
 

@@ -9,6 +9,77 @@
     tools:showIn="@layout/app_bar_approve">
 
 
+    <RelativeLayout
+        android:layout_width="391dp"
+        android:layout_height="516dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:layout_editor_absoluteY="-6dp"
+        tools:layout_editor_absoluteX="-15dp">
 
 
+        <EditText
+            android:id="@+id/amount_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/deposit_btn"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="86dp"
+            android:ems="10"
+            android:inputType="number"
+            tools:layout_editor_absoluteX="85dp"
+            tools:layout_editor_absoluteY="170dp" />
+
+        <TextView
+            android:id="@+id/status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/amount_text"
+            android:layout_alignStart="@+id/amount_text"
+            android:text="Amount"
+            android:textSize="20sp"
+            tools:layout_editor_absoluteX="85dp"
+            tools:layout_editor_absoluteY="136dp" />
+
+        <Button
+            android:id="@+id/deposit_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="139dp"
+            android:text="Deposit"
+            tools:layout_editor_absoluteX="134dp"
+            tools:layout_editor_absoluteY="253dp" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="65dp"
+            android:text="Deposit with Mobile Money"
+            android:textSize="20sp"
+            tools:layout_editor_absoluteX="72dp"
+            tools:layout_editor_absoluteY="61dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignStart="@+id/status" />
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="41dp"
+            android:text="Working"
+            android:textSize="30sp"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="148dp"
+            tools:layout_editor_absoluteY="386dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignEnd="@+id/deposit_btn" />
+    </RelativeLayout>
 </android.support.constraint.ConstraintLayout>
