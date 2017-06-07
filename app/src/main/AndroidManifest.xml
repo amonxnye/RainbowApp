@@ -12,6 +12,7 @@
         </intent-filter>
     </service>
 
+
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -60,6 +61,9 @@
             android:name=".Login"
             android:label="@string/title_activity_login"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="48cc4cb0ad251dad05ccc74792a2811994f6b25e" />
     </application>
 
 </manifest>
