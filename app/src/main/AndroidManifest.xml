@@ -6,11 +6,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
-    <service android:name=".MyFirebaseMessagingService">
-        <intent-filter>
-            <action android:name="com.google.firebase.MESSAGING_EVENT" />
-        </intent-filter>
-    </service>
+
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
@@ -40,6 +36,8 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
+
         <!-- [END firebase_service] -->
         <!-- [START firebase_iid_service] -->
         <service android:name=".MyFirebaseInstanceIDService">
