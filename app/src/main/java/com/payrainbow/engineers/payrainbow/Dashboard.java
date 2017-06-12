@@ -198,29 +198,36 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.home) {
             // Handle the camera action
-            Toast.makeText(Dashboard.this, "Dashboard+Home", Toast.LENGTH_SHORT).show();
+            // Toast.makeText(Dashboard.this, "Dashboard+Home", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(Dashboard.this, MainActivity.class);
             startActivity(intent);
-        } else if (id == R.id.nav_gallery) {
+        } else if (id == R.id.login) {
 
-            Toast.makeText(Dashboard.this, "Dashboard+Login", Toast.LENGTH_SHORT).show();
+            // Toast.makeText(Dashboard.this, "Dashboard+Login", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(Dashboard.this, Login.class);
             startActivity(intent);
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.deposit) {
 
-            Toast.makeText(Dashboard.this, "Dashboard+Approve", Toast.LENGTH_SHORT).show();
+            // Toast.makeText(Dashboard.this, "Dashboard+Approve", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(Dashboard.this, Deposit.class);
             startActivity(intent);
-        } else if (id == R.id.nav_manage) {
-            Toast.makeText(Dashboard.this, "Dashboard+Dashboard", Toast.LENGTH_SHORT).show();
 
+        } else if (id == R.id.dashboard) {
+            // Toast.makeText(Dashboard.this, "Dashboard+Dashboard", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(Dashboard.this, "Cardview",Toast.LENGTH_SHORT).show();
+
+            Intent intent = new Intent(Dashboard.this, DashCard.class);
+            startActivity(intent);
         } else if (id == R.id.nav_share) {
-           // new SendData();
-        } else if (id == R.id.nav_send) {
 
+            // new SendData();
+        } else if (id == R.id.Pay) {
+
+            Intent intent = new Intent(Dashboard.this, Pay.class);
+            startActivity(intent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

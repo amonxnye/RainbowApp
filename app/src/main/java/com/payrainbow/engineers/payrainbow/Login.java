@@ -78,7 +78,6 @@ private static final int RC_SIGN_IN = 9001;
 
         mAuth = FirebaseAuth.getInstance();
 
-
         //Button google = (Button)findViewById(R.id.sign_in_button);
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -143,7 +142,7 @@ private static final int RC_SIGN_IN = 9001;
                             FirebaseUser user = mAuth.getCurrentUser();
                             // updateUI(user);
                             Toast.makeText(Login.this, "Loggedin", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(Login.this,Dashboard.class);
+                            Intent intent = new Intent(Login.this,DashCard.class);
                             startActivity(intent);
                         } else {
                             // If sign in fails, display a message to the user.
@@ -201,33 +200,41 @@ private static final int RC_SIGN_IN = 9001;
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.home) {
             // Handle the camera action
-            Toast.makeText(Login.this, "Login+Home",Toast.LENGTH_SHORT).show();
+          //  Toast.makeText(Login.this, "Login+Home",Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(Login.this, MainActivity.class);
             startActivity(intent);
 
-        } else if (id == R.id.nav_gallery) {
+        } else if (id == R.id.login) {
 
-            Toast.makeText(Login.this, "Login+Login",Toast.LENGTH_SHORT).show();
+          //  Toast.makeText(Login.this, "Login+Login",Toast.LENGTH_SHORT).show();
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.deposit) {
 
-            Toast.makeText(Login.this, "Login+Approve",Toast.LENGTH_SHORT).show();
+          //  Toast.makeText(Login.this, "Login+Approve",Toast.LENGTH_SHORT).show();
 
             Intent intent = new Intent(Login.this,Deposit.class);
             startActivity(intent);
 
-        } else if (id == R.id.nav_manage) {
-            Toast.makeText(Login.this, "Login+Dashboard",Toast.LENGTH_SHORT).show();
+        } else if (id == R.id.dashboard) {
+           // Toast.makeText(Login.this, "Login+Dashboard",Toast.LENGTH_SHORT).show();
 
-            Intent intent = new Intent(Login.this,Dashboard.class);
+            Intent intent = new Intent(Login.this,DashCard.class);
             startActivity(intent);
 
         } else if (id == R.id.nav_share) {
+           /* Toast.makeText(Login.this, "Cardview",Toast.LENGTH_SHORT).show();
 
-        } else if (id == R.id.nav_send) {
+            Intent intent = new Intent(Login.this, DashCard.class);
+            startActivity(intent);
+**/
 
+        } else if (id == R.id.Pay) {
+           // Toast.makeText(Login.this, "Pay Activity",Toast.LENGTH_SHORT).show();
+
+            Intent intent = new Intent(Login.this,Pay.class);
+            startActivity(intent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

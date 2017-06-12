@@ -1,5 +1,6 @@
 package com.payrainbow.engineers.payrainbow;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -42,10 +43,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.logging.Handler;
-import java.util.logging.LogRecord;
 
 public class Deposit extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -170,23 +167,43 @@ public class Deposit extends AppCompatActivity implements NavigationView.OnNavig
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.home) {
             // Handle the camera action
-            Toast.makeText(Deposit.this, "Approve+Home",Toast.LENGTH_SHORT).show();
-        } else if (id == R.id.nav_gallery) {
+            //  Toast.makeText(Deposit.this, "Login+Home",Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(Deposit.this, MainActivity.class);
+            startActivity(intent);
 
-            Toast.makeText(Deposit.this, "Approve+Login",Toast.LENGTH_SHORT).show();
+        } else if (id == R.id.login) {
 
-        } else if (id == R.id.nav_slideshow) {
+            //  Toast.makeText(Deposit.this, "Login+Login",Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(Deposit.this,Login.class);
+            startActivity(intent);
 
-            Toast.makeText(Deposit.this, "Approve+Approve",Toast.LENGTH_SHORT).show();
-        } else if (id == R.id.nav_manage) {
-            Toast.makeText(Deposit.this, "Approve+Dashboard",Toast.LENGTH_SHORT).show();
+        } else if (id == R.id.deposit) {
+
+            //  Toast.makeText(Deposit.this, "Login+Approve",Toast.LENGTH_SHORT).show();
+
+            Intent intent = new Intent(Deposit.this,Deposit.class);
+            startActivity(intent);
+
+        } else if (id == R.id.dashboard) {
+            // Toast.makeText(Deposit.this, "Login+Dashboard",Toast.LENGTH_SHORT).show();
+
+            Intent intent = new Intent(Deposit.this,DashCard.class);
+            startActivity(intent);
 
         } else if (id == R.id.nav_share) {
+           /* Toast.makeText(Deposit.this, "Cardview",Toast.LENGTH_SHORT).show();
 
-        } else if (id == R.id.nav_send) {
+            Intent intent = new Intent(Deposit.this, DashCard.class);
+            startActivity(intent);
+**/
 
+        } else if (id == R.id.Pay) {
+            // Toast.makeText(Deposit.this, "Pay Activity",Toast.LENGTH_SHORT).show();
+
+            Intent intent = new Intent(Deposit.this,Pay.class);
+            startActivity(intent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

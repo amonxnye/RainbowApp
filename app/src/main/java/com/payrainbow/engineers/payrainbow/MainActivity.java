@@ -137,32 +137,40 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.home) {
             // Handle the camera action
-            Toast.makeText(MainActivity.this, "MainActivity+Home",Toast.LENGTH_SHORT).show();
+          //  Toast.makeText(MainActivity.this, "MainActivity+Home",Toast.LENGTH_SHORT).show();
 
-        } else if (id == R.id.nav_gallery) {
+        } else if (id == R.id.login) {
 
-            Toast.makeText(MainActivity.this, "MainActivity+Login",Toast.LENGTH_SHORT).show();
+          //  Toast.makeText(MainActivity.this, "MainActivity+Login",Toast.LENGTH_SHORT).show();
 
             Intent intent = new Intent(MainActivity.this, Login.class);
             startActivity(intent);
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.deposit) {
 
-            Toast.makeText(MainActivity.this, "MainActivity+Approve",Toast.LENGTH_SHORT).show();
+           // Toast.makeText(MainActivity.this, "MainActivity+Approve",Toast.LENGTH_SHORT).show();
 
             Intent intent = new Intent(MainActivity.this, Deposit.class);
             startActivity(intent);
-        } else if (id == R.id.nav_manage) {
-            Toast.makeText(MainActivity.this, "MainActivity+Dashboard",Toast.LENGTH_SHORT).show();
+        } else if (id == R.id.dashboard) {
+          //  Toast.makeText(MainActivity.this, "MainActivity+Dashboard",Toast.LENGTH_SHORT).show();
 
-            Intent intent = new Intent(MainActivity.this, Dashboard.class);
+            Intent intent = new Intent(MainActivity.this, DashCard.class);
             startActivity(intent);
 
         } else if (id == R.id.nav_share) {
+           /* Toast.makeText(MainActivity.this, "Cardview",Toast.LENGTH_SHORT).show();
 
-        } else if (id == R.id.nav_send) {
+            Intent intent = new Intent(MainActivity.this, DashCard.class);
+            startActivity(intent);*/
+
+        } else if (id == R.id.Pay) {
+          //  Toast.makeText(MainActivity.this, "Pay Activity",Toast.LENGTH_SHORT).show();
+
+            Intent intent = new Intent(MainActivity.this,Pay.class);
+            startActivity(intent);
 
         }
 
