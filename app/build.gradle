@@ -22,6 +22,10 @@ repositories {
 android {
     signingConfigs {
         config {
+            keyAlias 'rainbow'
+            keyPassword 'rainbow_code_2017'
+            storeFile file('/home/engineers/AndroidStudioProjects/RainbowApp/rainbow.jks')
+            storePassword 'rainbow_code_2017'
         }
     }
     compileSdkVersion 25
@@ -41,6 +45,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
+            signingConfig signingConfigs.config
         }
     }
     productFlavors {
@@ -50,6 +55,7 @@ android {
             targetSdkVersion 25
             testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
             versionName '1.0'
+            signingConfig signingConfigs.config
         }
     }
 }
