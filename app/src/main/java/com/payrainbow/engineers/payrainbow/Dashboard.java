@@ -58,7 +58,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
 
          Balancex = (TextView) findViewById(R.id.balance_text);
         Purchases = (TextView) findViewById(R.id.purchases_text);
-        Card = (TextView) findViewById(R.id.card_text);
+        Card = (TextView) findViewById(R.id.amount_text);
 
 
 

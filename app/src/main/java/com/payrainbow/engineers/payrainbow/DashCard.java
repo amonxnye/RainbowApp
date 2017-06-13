@@ -1,5 +1,6 @@
 package com.payrainbow.engineers.payrainbow;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,7 +14,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +34,7 @@ public class DashCard extends AppCompatActivity implements NavigationView.OnNavi
     TextView Balancex ;
     TextView Purchases ;
     TextView Card ;
+    public ProgressDialog mProgressDialog;
     //Button Payx;
 
     @Override
@@ -43,14 +44,21 @@ public class DashCard extends AppCompatActivity implements NavigationView.OnNavi
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setMessage("Loading........");
+        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        mProgressDialog.setCancelable(false);
+
         Balancex = (TextView) findViewById(R.id.balance_text);
         Purchases = (TextView) findViewById(R.id.purchases_text);
-        Card = (TextView) findViewById(R.id.card_text);
+        Card = (TextView) findViewById(R.id.amount_text);
        // Payx = (Button) findViewById(R.id.paybtn);
+
 
         purchases();
         card();
         balance();
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -78,8 +86,17 @@ public class DashCard extends AppCompatActivity implements NavigationView.OnNavi
         });
         */
     }
+    public void showProgressDialog(){
+        mProgressDialog.show();
+    }
+
+    public void hideProgressDialog(){
+        mProgressDialog.hide();
+    }
+
 
     public void purchases(){
+        showProgressDialog();
         final String[] responsex = new String[1];
         // Instantiate the RequestQueue.
         RequestQueue queue = Volley.newRequestQueue(this);
@@ -103,9 +120,11 @@ public class DashCard extends AppCompatActivity implements NavigationView.OnNavi
 // Add the request to the RequestQueue.
         queue.add(stringRequest);
         // return responsex.toString() ;
+        hideProgressDialog();
     }
 
     public void card(){
+        showProgressDialog();
         // Instantiate the RequestQueue.
         RequestQueue queue = Volley.newRequestQueue(this);
         String url ="http://payrainbow.com/userdata_app.php?email="+currentUser.getEmail().toString()+"&data=card";
@@ -126,10 +145,12 @@ public class DashCard extends AppCompatActivity implements NavigationView.OnNavi
         });
 // Add the request to the RequestQueue.
         queue.add(stringRequest);
+        hideProgressDialog();
 
     }
 
     public void balance(){
+        showProgressDialog();
         // Instantiate the RequestQueue.
         RequestQueue queue = Volley.newRequestQueue(this);
         String url ="http://payrainbow.com/userdata_app.php?email="+currentUser.getEmail().toString()+"&data=balance";
@@ -150,6 +171,7 @@ public class DashCard extends AppCompatActivity implements NavigationView.OnNavi
         });
 // Add the request to the RequestQueue.
         queue.add(stringRequest);
+        hideProgressDialog();
     }
 
 
@@ -181,9 +203,10 @@ public class DashCard extends AppCompatActivity implements NavigationView.OnNavi
 
             Intent intent = new Intent(DashCard.this, DashCard.class);
             startActivity(intent);
-        } else if (id == R.id.nav_share) {
-
-            // new SendData();
+        } else if (id == R.id.Register) {
+            Toast.makeText(DashCard.this, "Log Out Please...", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(DashCard.this, Login.class);
+            startActivity(intent);
         } else if (id == R.id.Pay) {
 
             Intent intent = new Intent(DashCard.this, Pay.class);

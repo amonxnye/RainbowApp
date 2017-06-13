@@ -38,8 +38,8 @@ public class MainActivity extends AppCompatActivity
 
 
 
-        Button Dashboardx = (Button)findViewById(R.id.Dashboard);
-        Button Approve = (Button)findViewById(R.id.Approve);
+      //  Button Dashboardx = (Button)findViewById(R.id.Dashboard);
+       // Button Approve = (Button)findViewById(R.id.Approve);
         Button Login = (Button)findViewById(R.id.Login);
         Button Logout = (Button)findViewById(R.id.logoutbtn);
 
@@ -49,24 +49,6 @@ public class MainActivity extends AppCompatActivity
                 Toast.makeText(MainActivity.this, "Logout.",Toast.LENGTH_SHORT).show();
                 FirebaseAuth.getInstance().signOut();
                 Toast.makeText(MainActivity.this, "LoggedOut.",Toast.LENGTH_LONG).show();
-            }
-        });
-
-        Dashboardx.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(MainActivity.this, "Dashboard.",Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(MainActivity.this, Dashboard.class);
-                startActivity(intent);
-            }
-        });
-
-        Approve.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(MainActivity.this, "Approve.",Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(MainActivity.this, Deposit.class);
-                startActivity(intent);
             }
         });
 
@@ -160,11 +142,11 @@ public class MainActivity extends AppCompatActivity
             Intent intent = new Intent(MainActivity.this, DashCard.class);
             startActivity(intent);
 
-        } else if (id == R.id.nav_share) {
+        } else if (id == R.id.Register) {
            /* Toast.makeText(MainActivity.this, "Cardview",Toast.LENGTH_SHORT).show();
-
-            Intent intent = new Intent(MainActivity.this, DashCard.class);
-            startActivity(intent);*/
+*/
+            Intent intent = new Intent(MainActivity.this, Register.class);
+            startActivity(intent);
 
         } else if (id == R.id.Pay) {
           //  Toast.makeText(MainActivity.this, "Pay Activity",Toast.LENGTH_SHORT).show();

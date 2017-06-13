@@ -10,4 +10,6 @@
     <string name="title_activity_login">Login</string>
     <string name="title_activity_dash_card">DashCard</string>
     <string name="title_activity_pay">Pay</string>
+    <string name="title_activity_register">Register</string>
+    <string name="link"><a href="https://user.payrainbow.com/user/resetPassword.html">Forgot Password?</a></string>
 </resources>

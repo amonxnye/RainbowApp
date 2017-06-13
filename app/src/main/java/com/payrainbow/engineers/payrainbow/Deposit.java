@@ -192,12 +192,10 @@ public class Deposit extends AppCompatActivity implements NavigationView.OnNavig
             Intent intent = new Intent(Deposit.this,DashCard.class);
             startActivity(intent);
 
-        } else if (id == R.id.nav_share) {
-           /* Toast.makeText(Deposit.this, "Cardview",Toast.LENGTH_SHORT).show();
-
-            Intent intent = new Intent(Deposit.this, DashCard.class);
+        } else if (id == R.id.Register) {
+            Toast.makeText(Deposit.this, "Log Out Please...", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(Deposit.this, Login.class);
             startActivity(intent);
-**/
 
         } else if (id == R.id.Pay) {
             // Toast.makeText(Deposit.this, "Pay Activity",Toast.LENGTH_SHORT).show();

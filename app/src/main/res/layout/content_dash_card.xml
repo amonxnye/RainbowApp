@@ -128,8 +128,8 @@
                     android:id="@+id/card_text_new"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_above="@+id/card_text"
-                    android:layout_alignStart="@+id/card_text"
+                    android:layout_above="@+id/amount_text"
+                    android:layout_alignStart="@+id/amount_text"
                     android:text="Card/Account"
                     android:textSize="30sp"
                     android:textStyle="bold"
@@ -137,7 +137,7 @@
                     tools:layout_editor_absoluteY="34dp" />
 
                 <TextView
-                    android:id="@+id/card_text"
+                    android:id="@+id/amount_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"

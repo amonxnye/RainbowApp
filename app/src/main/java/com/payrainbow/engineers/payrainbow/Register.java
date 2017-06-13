@@ -12,16 +12,14 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
 import android.text.TextUtils;
-import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
@@ -39,29 +37,32 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
-public class Login extends AppCompatActivity
+public class Register extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, GoogleApiClient.OnConnectionFailedListener{
-private static final int RC_SIGN_IN = 9001;
+    private static final int RC_SIGN_IN = 9001;
     private GoogleApiClient mGoogleApiClient;
     private static final String TAG = "PayRainbow_APP" ;
     private FirebaseAuth mAuth;
     EditText Emailtext,Passwordtext;
     public ProgressDialog mProgressDialog;
-    public TextView register,forget;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_register);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
+
+
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setMessage("Loading........");
+        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        mProgressDialog.setCancelable(false);
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -88,35 +89,14 @@ private static final int RC_SIGN_IN = 9001;
         SignInButton signInButton = (SignInButton) findViewById(R.id.sign_in_button);
         signInButton.setSize(SignInButton.SIZE_WIDE);
 
-        mProgressDialog = new ProgressDialog(this);
-        mProgressDialog.setMessage("Loading........");
-        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        mProgressDialog.setCancelable(false);
+        Button Register = (Button)findViewById(R.id.EmailRegbtn);
+        Emailtext = (EditText) findViewById(R.id.emailReg);
+        Passwordtext = (EditText)findViewById(R.id.passwordReg);
 
-        final Button Login = (Button)findViewById(R.id.Emailloginbtn);
-        Emailtext = (EditText) findViewById(R.id.email);
-        Passwordtext = (EditText)findViewById(R.id.password);
-
-        register = (TextView)findViewById(R.id.registerlink);
-        forget = (TextView)findViewById(R.id.forgetlink);
-
-        register.setOnClickListener(new View.OnClickListener() {
+        Register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Login.this, Register.class);
-                startActivity(intent);
-            }
-        });
-
-        forget.setMovementMethod(LinkMovementMethod.getInstance());
-
-
-
-        Login.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Login.setEnabled(true);
-                EmailsignIn(Emailtext.getText().toString(),Passwordtext.getText().toString());
+                createAccount(Emailtext.getText().toString(),Passwordtext.getText().toString());
             }
         });
 
@@ -161,14 +141,14 @@ private static final int RC_SIGN_IN = 9001;
             if (result.isSuccess()) {
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = result.getSignInAccount();
-                Toast.makeText(this, "Logging....", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Registering....", Toast.LENGTH_SHORT).show();
                 firebaseAuthWithGoogle(account);
                 //Toast.makeText(this, "Loggedin", Toast.LENGTH_SHORT).show();
 
             } else {
                 // Google Sign In failed, update UI appropriately
                 // ...
-                Toast.makeText(Login.this, "Failed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Register.this, "Authentication failed", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -185,13 +165,14 @@ private static final int RC_SIGN_IN = 9001;
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             // updateUI(user);
-                            Toast.makeText(Login.this, "Loggedin", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(Login.this,DashCard.class);
-                            startActivity(intent);
+                            sendEmailVerification();
+                          //  Toast.makeText(Register.this, "Registered Successfully", Toast.LENGTH_SHORT).show();
+                          //  Intent intent = new Intent(Register.this,Login.class);
+                           // startActivity(intent);
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
-                            Toast.makeText(Login.this, "Authentication failed.",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Register.this, "Authentication failed.",Toast.LENGTH_SHORT).show();
                             // updateUI(null);
                             //  Toast.makeText(MainActivity.this, "LoggedOut", Toast.LENGTH_SHORT).show();
                         }
@@ -201,61 +182,44 @@ private static final int RC_SIGN_IN = 9001;
                 });
     }
     private void signIn() {
-        showProgressDialog();
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
         mGoogleApiClient.connect();
-        hideProgressDialog();
-
     }
 
-    public void showProgressDialog(){
-        mProgressDialog.show();
-    }
-
-    public void hideProgressDialog(){
-        mProgressDialog.hide();
-    }
-
-    private void EmailsignIn(String email, String password) {
-        Log.d(TAG, "signIn:" + email);
+    private void createAccount(String email, String password) {
+        Log.d(TAG, "createAccount:" + email);
         if (!validateForm()) {
             return;
         }
 
         showProgressDialog();
 
-        // [START sign_in_with_email]
-        mAuth.signInWithEmailAndPassword(email, password)
+        // [START create_user_with_email]
+        mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithEmail:success");
+                            Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                           //  updateUI(user);
-                            Toast.makeText(Login.this, "Loggedin", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(Login.this,DashCard.class);
-                            startActivity(intent);
+                            sendEmailVerification();
                         } else {
                             // If sign in fails, display a message to the user.
-                            Log.w(TAG, "signInWithEmail:failure", task.getException());
-                            Toast.makeText(Login.this, "Authentication failed.",
+                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                            Toast.makeText(Register.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
-                           // updateUI(null);
+                          //  updateUI(null);
                         }
 
                         // [START_EXCLUDE]
-                        if (!task.isSuccessful()) {
-
-                          //  mStatusTextView.setText(R.string.auth_failed);
-                        }
                         hideProgressDialog();
                         // [END_EXCLUDE]
                     }
                 });
-        // [END sign_in_with_email]
+        // [END create_user_with_email]
     }
 
     private boolean validateForm() {
@@ -278,6 +242,49 @@ private static final int RC_SIGN_IN = 9001;
         }
 
         return valid;
+    }
+
+    private void sendEmailVerification() {
+        // Disable button
+      //  findViewById(R.id.verify_email_button).setEnabled(false);
+
+        // Send verification email
+        // [START send_email_verification]
+        final FirebaseUser user = mAuth.getCurrentUser();
+        user.sendEmailVerification()
+                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        // [START_EXCLUDE]
+                        // Re-enable button
+                      //  findViewById(R.id.verify_email_button).setEnabled(true);
+
+                        if (task.isSuccessful()) {
+                            Toast.makeText(Register.this,
+                                    "Verification email sent to " + user.getEmail(),
+                                    Toast.LENGTH_SHORT).show();
+
+                              Intent intent = new Intent(Register.this,Login.class);
+                             startActivity(intent);
+                        } else {
+                            Log.e(TAG, "sendEmailVerification", task.getException());
+                            Toast.makeText(Register.this,
+                                    "Failed to send verification email.",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                        // [END_EXCLUDE]
+                    }
+                });
+        // [END send_email_verification]
+    }
+
+
+    public void showProgressDialog(){
+       mProgressDialog.show();
+    }
+
+    public void hideProgressDialog(){
+        mProgressDialog.hide();
     }
 
     @Override
@@ -320,35 +327,38 @@ private static final int RC_SIGN_IN = 9001;
 
         if (id == R.id.home) {
             // Handle the camera action
-          //  Toast.makeText(Login.this, "Login+Home",Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(Login.this, MainActivity.class);
+            //  Toast.makeText(Register.this, "Login+Home",Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(Register.this, MainActivity.class);
             startActivity(intent);
 
         } else if (id == R.id.login) {
 
-          //  Toast.makeText(Login.this, "Login+Login",Toast.LENGTH_SHORT).show();
+            //  Toast.makeText(Register.this, "Login+Login",Toast.LENGTH_SHORT).show();
 
         } else if (id == R.id.deposit) {
 
-          //  Toast.makeText(Login.this, "Login+Approve",Toast.LENGTH_SHORT).show();
+            //  Toast.makeText(Register.this, "Login+Approve",Toast.LENGTH_SHORT).show();
 
-            Intent intent = new Intent(Login.this,Deposit.class);
+            Intent intent = new Intent(Register.this,Deposit.class);
             startActivity(intent);
 
         } else if (id == R.id.dashboard) {
-           // Toast.makeText(Login.this, "Login+Dashboard",Toast.LENGTH_SHORT).show();
+            // Toast.makeText(Register.this, "Login+Dashboard",Toast.LENGTH_SHORT).show();
 
-            Intent intent = new Intent(Login.this,DashCard.class);
+            Intent intent = new Intent(Register.this,DashCard.class);
             startActivity(intent);
 
         } else if (id == R.id.Register) {
-            Intent intent = new Intent(Login.this, Register.class);
-            startActivity(intent);
+          Toast.makeText(Register.this, "Reister",Toast.LENGTH_SHORT).show();
+
+//            Intent intent = new Intent(Register.this, Register.class);
+//            startActivity(intent);
+
 
         } else if (id == R.id.Pay) {
-           // Toast.makeText(Login.this, "Pay Activity",Toast.LENGTH_SHORT).show();
+            // Toast.makeText(Register.this, "Pay Activity",Toast.LENGTH_SHORT).show();
 
-            Intent intent = new Intent(Login.this,Pay.class);
+            Intent intent = new Intent(Register.this,Pay.class);
             startActivity(intent);
         }
 
@@ -358,9 +368,9 @@ private static final int RC_SIGN_IN = 9001;
     }
 
     @Override
-        public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
-        }
+    }
 
 
 

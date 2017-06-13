@@ -18,7 +18,7 @@
 
 
         <TextView
-            android:id="@+id/card_text"
+            android:id="@+id/amount_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="TextView"
@@ -38,8 +38,8 @@
             android:textSize="30sp"
             tools:layout_editor_absoluteX="1dp"
             tools:layout_editor_absoluteY="190dp"
-            android:layout_alignBaseline="@+id/card_text"
-            android:layout_alignBottom="@+id/card_text"
+            android:layout_alignBaseline="@+id/amount_text"
+            android:layout_alignBottom="@+id/amount_text"
             android:layout_alignEnd="@+id/text1" />
 
         <TextView
