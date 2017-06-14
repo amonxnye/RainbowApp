@@ -42,20 +42,19 @@ import com.google.firebase.auth.GoogleAuthProvider;
 public class Login extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, GoogleApiClient.OnConnectionFailedListener{
 private static final int RC_SIGN_IN = 9001;
-    private GoogleApiClient mGoogleApiClient;
     private static final String TAG = "PayRainbow_APP" ;
-    private FirebaseAuth mAuth;
-    EditText Emailtext,Passwordtext;
     public ProgressDialog mProgressDialog;
     public TextView register,forget;
+    EditText Emailtext,Passwordtext;
+    private GoogleApiClient mGoogleApiClient;
+    private FirebaseAuth mAuth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -201,11 +200,11 @@ private static final int RC_SIGN_IN = 9001;
                 });
     }
     private void signIn() {
-        showProgressDialog();
+       // showProgressDialog();
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
         mGoogleApiClient.connect();
-        hideProgressDialog();
+      //  hideProgressDialog();
 
     }
 
