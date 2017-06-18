@@ -199,6 +199,7 @@ private static final int RC_SIGN_IN = 9001;
                     }
                 });
     }
+
     private void signIn() {
        // showProgressDialog();
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);

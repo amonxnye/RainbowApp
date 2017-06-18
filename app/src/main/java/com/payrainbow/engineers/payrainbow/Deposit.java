@@ -1,5 +1,6 @@
 package com.payrainbow.engineers.payrainbow;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -60,6 +61,8 @@ public class Deposit extends AppCompatActivity implements NavigationView.OnNavig
             tryvar_external_ref = "",
             tryvar_sender_reference ="";
     FirebaseUser user ;
+    public ProgressDialog mProgressDialog;
+    public String value;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +81,11 @@ public class Deposit extends AppCompatActivity implements NavigationView.OnNavig
 
 
         status_view = (TextView)findViewById(R.id.status);
+
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setMessage("Loading........");
+        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        mProgressDialog.setCancelable(false);
 
 
         depositbtn = (Button)findViewById(R.id.deposit_btn);
@@ -127,6 +135,13 @@ public class Deposit extends AppCompatActivity implements NavigationView.OnNavig
         });
     }
 
+    public void showProgressDialog(){
+        mProgressDialog.show();
+    }
+
+    public void hideProgressDialog(){
+        mProgressDialog.hide();
+    }
 
 
     @Override
@@ -212,6 +227,7 @@ public class Deposit extends AppCompatActivity implements NavigationView.OnNavig
 
     public void Volley_Deposit_step_one(String var_sender_phone, String var_amount, final String var_external_ref, String var_sender_reference ){
 
+        showProgressDialog();
 
         try {
             RequestQueue requestQueue = Volley.newRequestQueue(this);
@@ -328,6 +344,7 @@ public class Deposit extends AppCompatActivity implements NavigationView.OnNavig
 
                                                 Volley_Deposit_step_two(finalRequest_id, var_external_ref);
                                                 //   Volley_Deposit_step_three(finalTx_reference,var_external_ref);
+                                               // hideProgressDialog();
                                             }
                                         }.start();
 
@@ -457,7 +474,7 @@ public class Deposit extends AppCompatActivity implements NavigationView.OnNavig
                            // Toast.makeText(Deposit.this, tx_status, Toast.LENGTH_SHORT).show();
 
                             final String finalTx_reference = tx_reference;
-                            final int secs = 20;
+                            final int secs = 30;
 
                             Deposit.this.runOnUiThread(new Runnable() {
                                 @Override
@@ -599,8 +616,13 @@ public class Deposit extends AppCompatActivity implements NavigationView.OnNavig
                         } catch (UnsupportedEncodingException e) {
                             e.printStackTrace();
                         }
-                        Log.d(TAG, "Done"+json);
 
+                        Log.d(TAG, "Done"+json);
+                      //  Toast.makeText(Deposit.this,json.toString(), Toast.LENGTH_SHORT).show();
+
+                        value = json;
+
+                        RemoveDialogue(value.toString());
 
 
                     }
@@ -611,9 +633,13 @@ public class Deposit extends AppCompatActivity implements NavigationView.OnNavig
             };
 
             requestQueue.add(stringRequest);
+
+            hideProgressDialog();
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+
     }
 
 
@@ -798,6 +824,19 @@ public class Deposit extends AppCompatActivity implements NavigationView.OnNavig
         Toast.makeText(Deposit.this, textdata, Toast.LENGTH_SHORT).show();
         status_view.setText("Done");
 
+        hideProgressDialog();
+
+    }
+
+    public void RemoveDialogue(String datav){
+      //  hideProgressDialog();
+        //Snackbar.make(view, datav, Snackbar.LENGTH_LONG).setAction("Action", null).show();
+
+      //  Toast.makeText(this, datav, Toast.LENGTH_SHORT).show();
+
+        Intent intent = new Intent(Deposit.this,DashCard.class);
+        intent.putExtra("Status_Poketi",datav);
+        startActivity(intent);
     }
 
 

@@ -35,6 +35,7 @@ public class DashCard extends AppCompatActivity implements NavigationView.OnNavi
     TextView Purchases ;
     TextView Card ;
     public ProgressDialog mProgressDialog;
+    String Poketi_status = "";
     //Button Payx;
 
     @Override
@@ -58,6 +59,17 @@ public class DashCard extends AppCompatActivity implements NavigationView.OnNavi
         purchases();
         card();
         balance();
+
+        if (getCallingActivity() == null) {
+            Poketi_status = getIntent().getStringExtra("Status_Poketi");
+            Toast.makeText(this, Poketi_status, Toast.LENGTH_SHORT).show();
+            //This Activity was called by startActivity
+        } else {
+            //This Activity was called by startActivityForResult
+        }
+
+
+
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
