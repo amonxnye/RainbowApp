@@ -19,15 +19,21 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.ContentViewEvent;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import io.fabric.sdk.android.Fabric;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, GoogleApiClient.OnConnectionFailedListener {
     // Choose an arbitrary request code value
     private static final String TAG = "PayRainbow_APP" ;
+    private FirebaseAuth mAuth;
+    FirebaseUser currentUser = mAuth.getInstance().getCurrentUser();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,8 +53,15 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 Toast.makeText(MainActivity.this, "Logout.",Toast.LENGTH_SHORT).show();
+                Answers.getInstance().logContentView(new ContentViewEvent()
+                        .putContentName("Log-Out")
+                        .putContentType("Logout")
+                        .putContentId(currentUser.getUid())
+                        .putCustomAttribute("email", currentUser.getEmail())
+                );
                 FirebaseAuth.getInstance().signOut();
                 Toast.makeText(MainActivity.this, "LoggedOut.",Toast.LENGTH_LONG).show();
+
             }
         });
 

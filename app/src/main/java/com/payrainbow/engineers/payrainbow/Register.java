@@ -22,6 +22,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -37,6 +38,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
+import io.fabric.sdk.android.Fabric;
+
 public class Register extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, GoogleApiClient.OnConnectionFailedListener{
     private static final int RC_SIGN_IN = 9001;
@@ -44,6 +47,7 @@ public class Register extends AppCompatActivity
     private static final String TAG = "PayRainbow_APP" ;
     private FirebaseAuth mAuth;
     EditText Emailtext,Passwordtext;
+    FirebaseUser currentUser = mAuth.getInstance().getCurrentUser();
     public ProgressDialog mProgressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +55,10 @@ public class Register extends AppCompatActivity
         setContentView(R.layout.activity_register);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        Fabric.with(this, new Crashlytics());
+        // TODO: Move this to where you establish a user session
+        logUser();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -119,6 +127,14 @@ public class Register extends AppCompatActivity
 
             }
         });
+    }
+
+    private void logUser() {
+        // TODO: Use the current user's information
+        // You can call any combination of these three methods
+        Crashlytics.setUserIdentifier(currentUser.getUid().toString());
+        Crashlytics.setUserEmail(currentUser.getEmail().toString());
+        Crashlytics.setUserName(currentUser.getDisplayName().toString());
     }
 
     /*

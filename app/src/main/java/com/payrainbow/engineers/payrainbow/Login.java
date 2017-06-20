@@ -24,6 +24,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.ContentViewEvent;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -39,6 +42,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
+import io.fabric.sdk.android.Fabric;
+
 public class Login extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, GoogleApiClient.OnConnectionFailedListener{
 private static final int RC_SIGN_IN = 9001;
@@ -48,11 +53,13 @@ private static final int RC_SIGN_IN = 9001;
     EditText Emailtext,Passwordtext;
     private GoogleApiClient mGoogleApiClient;
     private FirebaseAuth mAuth;
+    FirebaseUser currentUser = mAuth.getInstance().getCurrentUser();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        Fabric.with(this, new Crashlytics());
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -140,16 +147,30 @@ private static final int RC_SIGN_IN = 9001;
         });
     }
 
-    /*
   @Override
   public void onStart() {
       super.onStart();
       // Check if user is signed in (non-null) and update UI accordingly.
-      FirebaseUser currentUser = mAuth.getCurrentUser();
+      if(currentUser.getUid().isEmpty()){
 
-     // updateUI(currentUser);
+      }else {
+          try {
+              logUser();
+
+              Intent intent = new Intent(Login.this,DashCard.class);
+            //  intent.putExtra("Status_Poketi",datav);
+              startActivity(intent);
+
+          }catch (Exception e){
+             // RemoveDialogue("Failed");
+          }
+      }
+      // TODO: Move this to where you establish a user session
+
+
+
   }
-*/
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -185,6 +206,13 @@ private static final int RC_SIGN_IN = 9001;
                             FirebaseUser user = mAuth.getCurrentUser();
                             // updateUI(user);
                             Toast.makeText(Login.this, "Loggedin", Toast.LENGTH_SHORT).show();
+                            // TODO: Use your own attributes to track content views in your app
+                            Answers.getInstance().logContentView(new ContentViewEvent()
+                                    .putContentName("Google-Login")
+                                    .putContentType("Login")
+                                    .putContentId(user.getUid())
+                                    .putCustomAttribute("email", user.getEmail())
+                            );
                             Intent intent = new Intent(Login.this,DashCard.class);
                             startActivity(intent);
                         } else {
@@ -209,6 +237,13 @@ private static final int RC_SIGN_IN = 9001;
 
     }
 
+    private void logUser() {
+        // TODO: Use the current user's information
+        // You can call any combination of these three methods
+        Crashlytics.setUserIdentifier(currentUser.getUid().toString());
+        Crashlytics.setUserEmail(currentUser.getEmail().toString());
+        Crashlytics.setUserName(currentUser.getDisplayName().toString());
+    }
     public void showProgressDialog(){
         mProgressDialog.show();
     }
@@ -236,6 +271,12 @@ private static final int RC_SIGN_IN = 9001;
                             FirebaseUser user = mAuth.getCurrentUser();
                           //  updateUI(user);
                             Toast.makeText(Login.this, "Loggedin", Toast.LENGTH_SHORT).show();
+                            Answers.getInstance().logContentView(new ContentViewEvent()
+                                    .putContentName("Email-Login")
+                                    .putContentType("Login")
+                                    .putContentId(user.getUid())
+                                    .putCustomAttribute("email", user.getEmail())
+                            );
                             Intent intent = new Intent(Login.this,DashCard.class);
                             startActivity(intent);
                         } else {

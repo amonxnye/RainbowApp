@@ -34,6 +34,9 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.ContentViewEvent;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -44,6 +47,8 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+
+import io.fabric.sdk.android.Fabric;
 
 public class Deposit extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -73,6 +78,11 @@ public class Deposit extends AppCompatActivity implements NavigationView.OnNavig
         mAuth = FirebaseAuth.getInstance();
 
          user = mAuth.getCurrentUser();
+
+        Fabric.with(this, new Crashlytics());
+        // TODO: Move this to where you establish a user session
+        logUser();
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -133,6 +143,14 @@ public class Deposit extends AppCompatActivity implements NavigationView.OnNavig
                 //sender_ref
             }
         });
+    }
+
+    private void logUser() {
+        // TODO: Use the current user's information
+        // You can call any combination of these three methods
+        Crashlytics.setUserIdentifier(user.getUid().toString());
+        Crashlytics.setUserEmail(user.getEmail().toString());
+        Crashlytics.setUserName(user.getDisplayName().toString());
     }
 
     public void showProgressDialog(){
@@ -557,6 +575,7 @@ public class Deposit extends AppCompatActivity implements NavigationView.OnNavig
 
     private void Volley_Deposit_server( String var_tx_reference, String var_external_ref, String email, String phone_number, String var_request_id,  String var_amount) {
 
+        final FirebaseUser currentUser = mAuth.getCurrentUser();
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         //   String URL = "http://payrainbow.com/depox_server.php";
         String URL = "http://payrainbow.com/depox_server.php?email="+email+"&amount="+var_amount+"&phone="+phone_number+"&merchant_code=337&request_id="+var_request_id+"&tx_reference="+var_tx_reference+"&external_ref="+var_external_ref+"&sender_reference="+tryvar_sender_reference;
@@ -579,6 +598,15 @@ public class Deposit extends AppCompatActivity implements NavigationView.OnNavig
         StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
+                // TODO: Use your own attributes to track content views in your app
+                Answers.getInstance().logContentView(new ContentViewEvent()
+                        .putContentName("InApp-Deposit")
+                        .putContentType("deposit")
+                        .putContentId(currentUser.getUid())
+                        .putCustomAttribute("Amount", amount)
+                        .putCustomAttribute("email", currentUser.getEmail())
+                );
+
                 Log.i("Payrainbow_server", response);
             }
         }, new Response.ErrorListener() {
@@ -663,6 +691,7 @@ public class Deposit extends AppCompatActivity implements NavigationView.OnNavig
             @Override
             public void onResponse(String response) {
                 Toast.makeText(Deposit.this, response.toString(),Toast.LENGTH_SHORT).show();
+
                 hideProgressDialog();
                 RemoveDialogue(response.toString());
             }

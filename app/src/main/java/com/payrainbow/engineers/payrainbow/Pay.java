@@ -24,8 +24,13 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.ContentViewEvent;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import io.fabric.sdk.android.Fabric;
 
 public class Pay extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener  {
 
@@ -36,6 +41,7 @@ public class Pay extends AppCompatActivity implements NavigationView.OnNavigatio
     EditText codex,cardx,amountx;
     String code ="";
     String card = "";
+    FirebaseUser user = mAuth.getInstance().getCurrentUser();
     String amount="";
     public ProgressDialog mProgressDialog;
 
@@ -45,6 +51,10 @@ public class Pay extends AppCompatActivity implements NavigationView.OnNavigatio
         setContentView(R.layout.activity_pay);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarx);
         setSupportActionBar(toolbar);
+
+        Fabric.with(this, new Crashlytics());
+        // TODO: Move this to where you establish a user session
+        logUser();
 
         final Button paybutton = (Button)findViewById(R.id.paybtn);
         Button codebutton = (Button)findViewById(R.id.codebtn);
@@ -140,6 +150,13 @@ public class Pay extends AppCompatActivity implements NavigationView.OnNavigatio
         return true;
     }
 
+    private void logUser() {
+        // TODO: Use the current user's information
+        // You can call any combination of these three methods
+        Crashlytics.setUserIdentifier(currentUser.getUid().toString());
+        Crashlytics.setUserEmail(currentUser.getEmail().toString());
+        Crashlytics.setUserName(currentUser.getDisplayName().toString());
+    }
     public void showProgressDialog(){
         mProgressDialog.show();
     }
@@ -164,6 +181,12 @@ public class Pay extends AppCompatActivity implements NavigationView.OnNavigatio
                         // Display the first 500 characters of the response string.
                       //  Purchases.setText(response.toString());
                       //  responsex[0] = response;
+                        // TODO: Use your own attributes to track content views in your app
+                        Answers.getInstance().logContentView(new ContentViewEvent()
+                                .putContentName("Twilio-Code-Sent")
+                                .putContentType("Code")
+                                .putContentId(currentUser.getUid())
+                           );
                         Toast.makeText(Pay.this, "Code Sent", Toast.LENGTH_SHORT).show();
                         hideProgressDialog();
                     }
@@ -205,6 +228,14 @@ public class Pay extends AppCompatActivity implements NavigationView.OnNavigatio
                         //  responsex[0] = response;
                         Log.d(TAG,response.toString());
                         //Toast.makeText(Pay.this, response.toString(), Toast.LENGTH_SHORT).show();
+                        // TODO: Use your own attributes to track content views in your app
+                        Answers.getInstance().logContentView(new ContentViewEvent()
+                                .putContentName("InApp-Payment")
+                                .putContentType("payment")
+                                .putContentId(currentUser.getUid())
+                                 .putCustomAttribute("Amount", amount)
+                        );
+
                         Toast.makeText(Pay.this, response.toString(), Toast.LENGTH_LONG).show();
                         hideProgressDialog();
                     }

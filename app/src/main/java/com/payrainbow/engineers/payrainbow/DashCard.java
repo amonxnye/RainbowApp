@@ -23,8 +23,13 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.ContentViewEvent;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import io.fabric.sdk.android.Fabric;
 
 public class DashCard extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener  {
 
@@ -38,12 +43,17 @@ public class DashCard extends AppCompatActivity implements NavigationView.OnNavi
     String Poketi_status = "";
     //Button Payx;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dash_card);
+        Fabric.with(this, new Crashlytics());
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        // TODO: Move this to where you establish a user session
+        logUser();
 
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setMessage("Loading........");
@@ -59,6 +69,15 @@ public class DashCard extends AppCompatActivity implements NavigationView.OnNavi
             purchases();
             card();
             balance();
+
+            // TODO: Use your own attributes to track content views in your app
+            Answers.getInstance().logContentView(new ContentViewEvent()
+                    .putContentName("InApp-Dashboard")
+                    .putContentType("dashboard")
+                    .putContentId(currentUser.getUid())
+                    .putCustomAttribute("email", currentUser.getEmail())
+            );
+
         }catch (Exception e){
             Intent intent = new Intent(DashCard.this,Login.class);
            // intent.putExtra("Status_Poketi",datav);
@@ -104,6 +123,15 @@ public class DashCard extends AppCompatActivity implements NavigationView.OnNavi
         });
         */
     }
+
+    private void logUser() {
+        // TODO: Use the current user's information
+        // You can call any combination of these three methods
+        Crashlytics.setUserIdentifier(currentUser.getUid().toString());
+        Crashlytics.setUserEmail(currentUser.getEmail().toString());
+        Crashlytics.setUserName(currentUser.getDisplayName().toString());
+    }
+
     public void showProgressDialog(){
         mProgressDialog.show();
     }
