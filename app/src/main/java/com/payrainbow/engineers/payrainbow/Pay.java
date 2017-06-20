@@ -263,6 +263,7 @@ public class Pay extends AppCompatActivity implements NavigationView.OnNavigatio
                         .putItemPrice(new BigDecimal((amount).replaceAll(","," ")))
                         .putCustomAttribute("Email",currentUser.getEmail())
                         .putSuccess(false)
+                        .putCurrency(Currency.getInstance("UGX"))
                 );
                 hideProgressDialog();
             }

@@ -57,7 +57,7 @@ android {
             signingConfig signingConfigs.config
             targetSdkVersion 25
             testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
-            versionCode 4
+            versionCode 5
             versionName '1.0'
         }
     }
