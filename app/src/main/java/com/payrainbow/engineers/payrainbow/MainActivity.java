@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity
     // Choose an arbitrary request code value
     private static final String TAG = "PayRainbow_APP" ;
     private FirebaseAuth mAuth;
-    FirebaseUser currentUser = mAuth.getInstance().getCurrentUser();
+    //FirebaseUser currentUser = mAuth.getInstance().getCurrentUser();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,8 +41,6 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-
 
       //  Button Dashboardx = (Button)findViewById(R.id.Dashboard);
        // Button Approve = (Button)findViewById(R.id.Approve);
@@ -56,12 +54,10 @@ public class MainActivity extends AppCompatActivity
                 Answers.getInstance().logContentView(new ContentViewEvent()
                         .putContentName("Log-Out")
                         .putContentType("Logout")
-                        .putContentId(currentUser.getUid())
-                        .putCustomAttribute("email", currentUser.getEmail())
+
                 );
                 FirebaseAuth.getInstance().signOut();
                 Toast.makeText(MainActivity.this, "LoggedOut.",Toast.LENGTH_LONG).show();
-
             }
         });
 

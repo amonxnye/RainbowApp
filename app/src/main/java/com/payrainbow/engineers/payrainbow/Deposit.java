@@ -37,6 +37,7 @@ import com.android.volley.toolbox.Volley;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.ContentViewEvent;
+import com.crashlytics.android.answers.CustomEvent;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -81,7 +82,7 @@ public class Deposit extends AppCompatActivity implements NavigationView.OnNavig
 
         Fabric.with(this, new Crashlytics());
         // TODO: Move this to where you establish a user session
-        logUser();
+       // logUser();
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -573,7 +574,7 @@ public class Deposit extends AppCompatActivity implements NavigationView.OnNavig
         }
     }
 
-    private void Volley_Deposit_server( String var_tx_reference, String var_external_ref, String email, String phone_number, String var_request_id,  String var_amount) {
+    private void Volley_Deposit_server(final String var_tx_reference, String var_external_ref, String email, final String phone_number, String var_request_id, final String var_amount) {
 
         final FirebaseUser currentUser = mAuth.getCurrentUser();
         RequestQueue requestQueue = Volley.newRequestQueue(this);
@@ -599,12 +600,15 @@ public class Deposit extends AppCompatActivity implements NavigationView.OnNavig
             @Override
             public void onResponse(String response) {
                 // TODO: Use your own attributes to track content views in your app
-                Answers.getInstance().logContentView(new ContentViewEvent()
-                        .putContentName("InApp-Deposit")
-                        .putContentType("deposit")
-                        .putContentId(currentUser.getUid())
-                        .putCustomAttribute("Amount", amount)
+                Answers.getInstance().logCustom(new CustomEvent("MM Deposits")
+
+                        .putCustomAttribute("User ID", currentUser.getUid())
+                        .putCustomAttribute("Amount", var_amount)
                         .putCustomAttribute("email", currentUser.getEmail())
+                        .putCustomAttribute("tx_reference", var_tx_reference)
+                        .putCustomAttribute("sender_reference", tryvar_sender_reference)
+                        .putCustomAttribute("phone", phone_number)
+                        .putCustomAttribute("Response", response.toString())
                 );
 
                 Log.i("Payrainbow_server", response);

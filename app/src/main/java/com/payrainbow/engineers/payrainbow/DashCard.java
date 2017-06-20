@@ -26,6 +26,7 @@ import com.android.volley.toolbox.Volley;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.ContentViewEvent;
+import com.crashlytics.android.answers.CustomEvent;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -53,7 +54,7 @@ public class DashCard extends AppCompatActivity implements NavigationView.OnNavi
         setSupportActionBar(toolbar);
 
         // TODO: Move this to where you establish a user session
-        logUser();
+       // logUser();
 
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setMessage("Loading........");
@@ -71,10 +72,8 @@ public class DashCard extends AppCompatActivity implements NavigationView.OnNavi
             balance();
 
             // TODO: Use your own attributes to track content views in your app
-            Answers.getInstance().logContentView(new ContentViewEvent()
-                    .putContentName("InApp-Dashboard")
-                    .putContentType("dashboard")
-                    .putContentId(currentUser.getUid())
+            Answers.getInstance().logCustom(new CustomEvent("DashboardCheck")
+                    .putCustomAttribute("email", currentUser.getUid())
                     .putCustomAttribute("email", currentUser.getEmail())
             );
 

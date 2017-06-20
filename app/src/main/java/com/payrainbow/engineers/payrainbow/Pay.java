@@ -27,8 +27,13 @@ import com.android.volley.toolbox.Volley;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.ContentViewEvent;
+import com.crashlytics.android.answers.CustomEvent;
+import com.crashlytics.android.answers.PurchaseEvent;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import java.math.BigDecimal;
+import java.util.Currency;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -54,7 +59,7 @@ public class Pay extends AppCompatActivity implements NavigationView.OnNavigatio
 
         Fabric.with(this, new Crashlytics());
         // TODO: Move this to where you establish a user session
-        logUser();
+       // logUser();
 
         final Button paybutton = (Button)findViewById(R.id.paybtn);
         Button codebutton = (Button)findViewById(R.id.codebtn);
@@ -182,10 +187,10 @@ public class Pay extends AppCompatActivity implements NavigationView.OnNavigatio
                       //  Purchases.setText(response.toString());
                       //  responsex[0] = response;
                         // TODO: Use your own attributes to track content views in your app
-                        Answers.getInstance().logContentView(new ContentViewEvent()
-                                .putContentName("Twilio-Code-Sent")
-                                .putContentType("Code")
-                                .putContentId(currentUser.getUid())
+                        Answers.getInstance().logCustom(new CustomEvent("TwilioCodeSent")
+                                //.putCustomAttribute("Twilio-Code-Sent",)
+                                //.putContentType("Code")
+                                .putCustomAttribute("User ID",currentUser.getUid())
                            );
                         Toast.makeText(Pay.this, "Code Sent", Toast.LENGTH_SHORT).show();
                         hideProgressDialog();
@@ -229,11 +234,19 @@ public class Pay extends AppCompatActivity implements NavigationView.OnNavigatio
                         Log.d(TAG,response.toString());
                         //Toast.makeText(Pay.this, response.toString(), Toast.LENGTH_SHORT).show();
                         // TODO: Use your own attributes to track content views in your app
-                        Answers.getInstance().logContentView(new ContentViewEvent()
-                                .putContentName("InApp-Payment")
-                                .putContentType("payment")
-                                .putContentId(currentUser.getUid())
-                                 .putCustomAttribute("Amount", amount)
+                        Answers.getInstance().logCustom(new CustomEvent("InApp-Payments")
+                                .putCustomAttribute("User ID",currentUser.getUid())
+                                .putCustomAttribute("Amount",amount)
+                                .putCustomAttribute("Email",currentUser.getEmail())
+                        );
+
+
+                        Answers.getInstance().logPurchase(new PurchaseEvent()
+                                .putCustomAttribute("User ID",currentUser.getUid())
+                                .putItemPrice(new BigDecimal((amount).replaceAll(","," ")))
+                                .putCustomAttribute("Email",currentUser.getEmail())
+                                .putSuccess(true)
+                                .putCurrency(Currency.getInstance("UGX"))
                         );
 
                         Toast.makeText(Pay.this, response.toString(), Toast.LENGTH_LONG).show();
@@ -244,6 +257,13 @@ public class Pay extends AppCompatActivity implements NavigationView.OnNavigatio
             public void onErrorResponse(VolleyError error) {
                 // Balancex.setText("Retry");
                 Toast.makeText(Pay.this, "PaymentFailed", Toast.LENGTH_SHORT).show();
+
+                Answers.getInstance().logPurchase(new PurchaseEvent()
+                        .putCustomAttribute("User ID",currentUser.getUid())
+                        .putItemPrice(new BigDecimal((amount).replaceAll(","," ")))
+                        .putCustomAttribute("Email",currentUser.getEmail())
+                        .putSuccess(false)
+                );
                 hideProgressDialog();
             }
         });

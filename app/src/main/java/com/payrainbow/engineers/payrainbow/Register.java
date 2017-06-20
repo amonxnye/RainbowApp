@@ -58,7 +58,7 @@ public class Register extends AppCompatActivity
 
         Fabric.with(this, new Crashlytics());
         // TODO: Move this to where you establish a user session
-        logUser();
+      //  logUser();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(

@@ -27,6 +27,7 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.ContentViewEvent;
+import com.crashlytics.android.answers.CustomEvent;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -146,7 +147,7 @@ private static final int RC_SIGN_IN = 9001;
             }
         });
     }
-
+/*
   @Override
   public void onStart() {
       super.onStart();
@@ -170,6 +171,7 @@ private static final int RC_SIGN_IN = 9001;
 
 
   }
+  */
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -207,11 +209,12 @@ private static final int RC_SIGN_IN = 9001;
                             // updateUI(user);
                             Toast.makeText(Login.this, "Loggedin", Toast.LENGTH_SHORT).show();
                             // TODO: Use your own attributes to track content views in your app
-                            Answers.getInstance().logContentView(new ContentViewEvent()
-                                    .putContentName("Google-Login")
-                                    .putContentType("Login")
-                                    .putContentId(user.getUid())
+                            Answers.getInstance().logCustom(new CustomEvent("Logins")
+
+                                    .putCustomAttribute("User ID", user.getUid())
                                     .putCustomAttribute("email", user.getEmail())
+                                    .putCustomAttribute("type", "Google")
+
                             );
                             Intent intent = new Intent(Login.this,DashCard.class);
                             startActivity(intent);
@@ -220,6 +223,13 @@ private static final int RC_SIGN_IN = 9001;
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
                             Toast.makeText(Login.this, "Authentication failed.",Toast.LENGTH_SHORT).show();
                             // updateUI(null);
+                            // TODO: Use your own attributes to track content views in your app
+                            Answers.getInstance().logCustom(new CustomEvent("Logins")
+                                    .putCustomAttribute("User ID", "null")
+                                    .putCustomAttribute("email", "null")
+                                    .putCustomAttribute("type", "failedGoogle")
+
+                            );
                             //  Toast.makeText(MainActivity.this, "LoggedOut", Toast.LENGTH_SHORT).show();
                         }
 
@@ -271,11 +281,13 @@ private static final int RC_SIGN_IN = 9001;
                             FirebaseUser user = mAuth.getCurrentUser();
                           //  updateUI(user);
                             Toast.makeText(Login.this, "Loggedin", Toast.LENGTH_SHORT).show();
-                            Answers.getInstance().logContentView(new ContentViewEvent()
-                                    .putContentName("Email-Login")
-                                    .putContentType("Login")
-                                    .putContentId(user.getUid())
+                            // TODO: Use your own attributes to track content views in your app
+                            Answers.getInstance().logCustom(new CustomEvent("Logins")
+
+                                    .putCustomAttribute("User ID", user.getUid())
                                     .putCustomAttribute("email", user.getEmail())
+                                    .putCustomAttribute("type", "EmailPassword")
+
                             );
                             Intent intent = new Intent(Login.this,DashCard.class);
                             startActivity(intent);
@@ -284,6 +296,13 @@ private static final int RC_SIGN_IN = 9001;
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
                             Toast.makeText(Login.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
+                            // TODO: Use your own attributes to track content views in your app
+                            Answers.getInstance().logCustom(new CustomEvent("Logins")
+                                    .putCustomAttribute("User ID", "null")
+                                    .putCustomAttribute("email", "null")
+                                    .putCustomAttribute("type", "failedEmailPassword")
+
+                            );
                            // updateUI(null);
                         }
 
