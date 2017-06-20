@@ -253,6 +253,7 @@ public class Deposit extends AppCompatActivity implements NavigationView.OnNavig
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     Log.e("Poketi", error.toString());
+                    RemoveDialogue("Failed");
                 }
             }) {
                 @Override
@@ -296,6 +297,7 @@ public class Deposit extends AppCompatActivity implements NavigationView.OnNavig
 
                             json = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
                         } catch (UnsupportedEncodingException e) {
+                            RemoveDialogue("Failed");
                             e.printStackTrace();
                         }
                         Log.d(TAG, json);
@@ -304,6 +306,7 @@ public class Deposit extends AppCompatActivity implements NavigationView.OnNavig
                         try {
                             obj = new JSONObject(json);
                         } catch (JSONException e) {
+                            RemoveDialogue("Failed");
                             e.printStackTrace();
                         }
 
@@ -356,6 +359,7 @@ public class Deposit extends AppCompatActivity implements NavigationView.OnNavig
 
 
                         } catch (JSONException e) {
+                            RemoveDialogue("Failed");
                             e.printStackTrace();
                         }
 
@@ -371,6 +375,7 @@ public class Deposit extends AppCompatActivity implements NavigationView.OnNavig
 
             requestQueue.add(stringRequest);
         } catch (JSONException e) {
+            RemoveDialogue("Failed");
             e.printStackTrace();
         }
     }
@@ -399,6 +404,7 @@ public class Deposit extends AppCompatActivity implements NavigationView.OnNavig
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     Log.e("Poketi", error.toString());
+                    RemoveDialogue("Failed");
                 }
             }) {
                 @Override
@@ -453,6 +459,7 @@ public class Deposit extends AppCompatActivity implements NavigationView.OnNavig
                         try {
                             obj = new JSONObject(json);
                         } catch (JSONException e) {
+                            RemoveDialogue("Failed");
                             e.printStackTrace();
                         }
 
@@ -495,6 +502,7 @@ public class Deposit extends AppCompatActivity implements NavigationView.OnNavig
                                             //Send to DB
                                             Volley_Deposit_server(finalTx_reference,var_external_ref,user.getEmail(),phone_number,var_request_id,tryamount);
 
+                                          //  loginRequeset(finalTx_reference,var_external_ref,user.getEmail(),phone_number,var_request_id,tryamount);
 
                                         }
                                     }.start();
@@ -509,6 +517,7 @@ public class Deposit extends AppCompatActivity implements NavigationView.OnNavig
 
 
                         } catch (JSONException e) {
+                            RemoveDialogue("Failed");
                             e.printStackTrace();
                         }
 
@@ -541,16 +550,19 @@ public class Deposit extends AppCompatActivity implements NavigationView.OnNavig
 
             requestQueue.add(stringRequest);
         } catch (JSONException e) {
+            RemoveDialogue("Failed");
             e.printStackTrace();
         }
     }
 
-    private void Volley_Deposit_server(String var_tx_reference, String var_external_ref, String email, String phone_number, String var_request_id,String var_amount) {
+    private void Volley_Deposit_server( String var_tx_reference, String var_external_ref, String email, String phone_number, String var_request_id,  String var_amount) {
 
-        try {
-            RequestQueue requestQueue = Volley.newRequestQueue(this);
-            String URL = "http://payrainbow.com/depox_server.php";
-            JSONObject jsonBody = new JSONObject();
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        //   String URL = "http://payrainbow.com/depox_server.php";
+        String URL = "http://payrainbow.com/depox_server.php?email="+email+"&amount="+var_amount+"&phone="+phone_number+"&merchant_code=337&request_id="+var_request_id+"&tx_reference="+var_tx_reference+"&external_ref="+var_external_ref+"&sender_reference="+tryvar_sender_reference;
+
+        final JSONObject jsonBody = new JSONObject();
+            /*
             jsonBody.put("email", email);
             jsonBody.put("phone", phone_number);
             jsonBody.put("merchant_code", "337");
@@ -559,89 +571,137 @@ public class Deposit extends AppCompatActivity implements NavigationView.OnNavig
             jsonBody.put("tx_reference", var_tx_reference);
             jsonBody.put("external_ref", var_external_ref);
             jsonBody.put("sender_reference", tryvar_sender_reference);
+*/
+        final String requestBody = jsonBody.toString();
+        // final String requestBodyJson = jsonBody.toString();
 
-            final String requestBody = jsonBody.toString();
-            // final String requestBodyJson = jsonBody.toString();
 
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.i("Payrainbow_server", response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("Payrainbow_server", error.toString());
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
 
-            StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
-                    Log.i("Payrainbow_server", response);
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> params = new HashMap<String, String>();
+                //params.put("Authorization-Key", "CV8FJVBHM6KXHEHUPYGWJJKFYEEWUQN8CKTAXNGRWRUQN9YAHN3");
+                return params;
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return requestBody == null ? null : requestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", requestBody, "utf-8");
+                    return null;
                 }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Log.e("Payrainbow_server", error.toString());
-                }
-            }) {
-                @Override
-                public String getBodyContentType() {
-                    return "application/json; charset=utf-8";
-                }
+            }
 
-                @Override
-                public Map<String, String> getHeaders() throws AuthFailureError {
-                    HashMap<String, String> params = new HashMap<String, String>();
-                    //params.put("Authorization-Key", "CV8FJVBHM6KXHEHUPYGWJJKFYEEWUQN8CKTAXNGRWRUQN9YAHN3");
-                    return params;
-                }
 
-                @Override
-                public byte[] getBody() throws AuthFailureError {
+
+            @Override
+            protected Response<String> parseNetworkResponse(NetworkResponse response) {
+                String responseString = "";
+                String json = "";
+
+                String tx_status = "";
+                String status = "";
+
+
+                if (response != null) {
+                    responseString = String.valueOf(response.statusCode);
+                    // can get more details such as response.headers
                     try {
-                        return requestBody == null ? null : requestBody.getBytes("utf-8");
-                    } catch (UnsupportedEncodingException uee) {
-                        VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", requestBody, "utf-8");
-                        return null;
+
+                        json = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
+                    } catch (UnsupportedEncodingException e) {
+                        RemoveDialogue("Failed");
+                        e.printStackTrace();
                     }
-                }
 
+                    Log.d(TAG, "Done"+json);
+                  //  Toast.makeText(Deposit.this,json.toString(), Toast.LENGTH_SHORT).show();
 
-                @Override
-                protected Response<String> parseNetworkResponse(NetworkResponse response) {
-                    String responseString = "";
-                    String json = "";
+                    value = json;
 
-                    String tx_status = "";
-                    String status = "";
+                    RemoveDialogue(value.toString());
 
-
-                    if (response != null) {
-                        responseString = String.valueOf(response.statusCode);
-                        // can get more details such as response.headers
-                        try {
-
-                            json = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
-                        } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
-                        }
-
-                        Log.d(TAG, "Done"+json);
-                      //  Toast.makeText(Deposit.this,json.toString(), Toast.LENGTH_SHORT).show();
-
-                        value = json;
-
-                        RemoveDialogue(value.toString());
-
-
-                    }
-                    return Response.success(responseString, HttpHeaderParser.parseCacheHeaders(response));
-                    //return Response.success(request_id);
 
                 }
-            };
+                return Response.success(responseString, HttpHeaderParser.parseCacheHeaders(response));
+                //return Response.success(request_id);
 
-            requestQueue.add(stringRequest);
+            }
+        };
 
-            hideProgressDialog();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        requestQueue.add(stringRequest);
+
+        hideProgressDialog();
 
 
     }
 
+    private void loginRequeset( String var_tx_reference, String var_external_ref,  String email, String phone_number, String var_request_id,  String var_amount) {
+        showProgressDialog();
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        String URL = "http://payrainbow.com/depox_server.php?email="+email+"&amount="+var_amount+"&phone="+phone_number+"&merchant_code=337&request_id="+var_request_id+"&tx_reference="+var_tx_reference+"&external_ref="+var_external_ref+"&sender_reference="+tryvar_sender_reference;
+
+        StringRequest jsonObjReq = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Toast.makeText(Deposit.this, response.toString(),Toast.LENGTH_SHORT).show();
+                hideProgressDialog();
+                RemoveDialogue(response.toString());
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                Toast.makeText(getApplicationContext(),
+                        error.getMessage(), Toast.LENGTH_SHORT).show();
+                // hide the progress dialog
+               hideProgressDialog();
+              //  RemoveDialogue("Failed");
+            }
+        })
+
+        {
+            /*
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> server_param = new HashMap<String, String>();
+                server_param.put("email", email);
+                server_param.put("phone", phone_number);
+                server_param.put("merchant_code", "337");
+                server_param.put("amount", var_amount);
+                server_param.put("request_id", var_request_id);
+                server_param.put("tx_reference", var_tx_reference);
+                server_param.put("external_ref", var_external_ref);
+                server_param.put("sender_reference", tryvar_sender_reference);
+                return server_param;
+            }
+            */
+
+        };
+
+        // Adding request to request queue
+        //RequestQueue
+        requestQueue.add(jsonObjReq);
+    }
 
     public void Volley_Deposit_step_three(String var_tx_reference,String var_external_ref ){
 
@@ -833,10 +893,15 @@ public class Deposit extends AppCompatActivity implements NavigationView.OnNavig
         //Snackbar.make(view, datav, Snackbar.LENGTH_LONG).setAction("Action", null).show();
 
       //  Toast.makeText(this, datav, Toast.LENGTH_SHORT).show();
+try {
+    Intent intent = new Intent(Deposit.this,DashCard.class);
+    intent.putExtra("Status_Poketi",datav);
+    startActivity(intent);
 
-        Intent intent = new Intent(Deposit.this,DashCard.class);
-        intent.putExtra("Status_Poketi",datav);
-        startActivity(intent);
+}catch (Exception e){
+    RemoveDialogue("Failed");
+}
+
     }
 
 

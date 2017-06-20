@@ -55,10 +55,16 @@ public class DashCard extends AppCompatActivity implements NavigationView.OnNavi
         Card = (TextView) findViewById(R.id.amount_text);
        // Payx = (Button) findViewById(R.id.paybtn);
 
+        try {
+            purchases();
+            card();
+            balance();
+        }catch (Exception e){
+            Intent intent = new Intent(DashCard.this,Login.class);
+           // intent.putExtra("Status_Poketi",datav);
+            startActivity(intent);
+        }
 
-        purchases();
-        card();
-        balance();
 
         if (getCallingActivity() == null) {
             Poketi_status = getIntent().getStringExtra("Status_Poketi");
@@ -109,6 +115,7 @@ public class DashCard extends AppCompatActivity implements NavigationView.OnNavi
 
     public void purchases(){
         showProgressDialog();
+
         final String[] responsex = new String[1];
         // Instantiate the RequestQueue.
         RequestQueue queue = Volley.newRequestQueue(this);
