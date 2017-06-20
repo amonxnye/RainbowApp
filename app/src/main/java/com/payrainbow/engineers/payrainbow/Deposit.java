@@ -83,7 +83,7 @@ public class Deposit extends AppCompatActivity implements NavigationView.OnNavig
         status_view = (TextView)findViewById(R.id.status);
 
         mProgressDialog = new ProgressDialog(this);
-        mProgressDialog.setMessage("Loading........");
+        mProgressDialog.setMessage("Please wait about 1-3mins........");
         mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         mProgressDialog.setCancelable(false);
 
@@ -564,7 +564,7 @@ public class Deposit extends AppCompatActivity implements NavigationView.OnNavig
             // final String requestBodyJson = jsonBody.toString();
 
 
-            StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
                     Log.i("Payrainbow_server", response);
